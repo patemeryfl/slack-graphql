@@ -1,4 +1,3 @@
-/* eslint no-console: 0 */
 export default {
   Mutation: {
     createTeam: async (parent, args, { models, user }) => {

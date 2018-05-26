@@ -12,5 +12,6 @@ module.exports = {
         "react/prop-types": 0,
         "react/no-unused-state": 0,
         "object-curly-newline": 0,
+        "no-console": 0,
       }
 };

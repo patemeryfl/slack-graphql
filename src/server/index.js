@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
+import cors from 'cors';
 import { makeExecutableSchema } from 'graphql-tools';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
@@ -11,6 +12,7 @@ const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers'))
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const app = express();
+app.use(cors('*'));
 
 // bodyParser is needed just for POST.
 app.use(
@@ -29,7 +31,7 @@ app.use(
 
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
-models.sequelize.sync().then(() => {
+models.sequelize.sync({ force: true }).then(() => {
   app.listen(8080);
 });
 

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import User from '../components';
 
 class Home extends Component {
     state = {
@@ -6,7 +7,7 @@ class Home extends Component {
     }
     render() {
       return (
-        <div>Hello {this.state.name}</div>
+        <User />
       );
     }
 }
