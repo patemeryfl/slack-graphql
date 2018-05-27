@@ -18,32 +18,37 @@ const loginMutation = gql`
 `;
 
 class LogIn extends Component {
-    state = {
-      emai: '',
-      emailError: '',
-      password: '',
-      passwordError: '',
-      showPassword: false,
-    }
+  state = {
+    email: '',
+    emailError: '',
+    password: '',
+    passwordError: '',
+    showPassword: false,
+  };
 
-    actions = {
-      handleChange: prop => (event) => {
-        this.setState({ [prop]: event.target.value });
-      },
-      handleMouseDownPassword: (event) => {
-        event.preventDefault();
-      },
-      handleClickShowPassword: () => {
-        this.setState({ showPassword: !this.state.showPassword });
-      },
-      submitLogin: async (login) => {
-        this.setState({ emailError: '', passwordError: '' });
+  actions = {
+    handleChange: (prop) => (event) => {
+      this.setState({ [prop]: event.target.value });
+    },
+    handleMouseDownPassword: (event) => {
+      event.preventDefault();
+    },
+    handleClickShowPassword: () => {
+      this.setState({ showPassword: !this.state.showPassword });
+    },
+    submitLogin: async (login) => {
+      this.setState({ emailError: '', passwordError: '' });
+      if (this.state.email === '') {
+        this.setState({ emailError: 'Email must be provided' });
+      } else if (this.state.password === '') {
+        this.setState({ passwordError: 'Password must be provided' });
+      } else {
         const { email, password } = { ...this.state };
         const response = await login({ variables: { email, password } });
         const { ok, token, refreshToken, errors } = response.data.login;
         if (ok) {
           localStorage.setItem('token', token);
-          localStorage.setItem('refresh', refreshToken);
+          localStorage.setItem('refreshToken', refreshToken);
           this.props.history.push('/');
         } else {
           const err = {};
@@ -52,27 +57,28 @@ class LogIn extends Component {
           });
           this.setState(err);
         }
-      },
-      clearForm: () => {
-        this.setState({ email: '', password: '' });
-      },
-    }
-    render() {
-      return (
-        <div style={{ marginTop: '70px' }}>
-          <Mutation mutation={loginMutation}>
-            {(login, { data }) => (
-              <LogInForm
-                register={() => this.props.history.push('/register')}
-                login={() => this.actions.submitLogin(login)}
-                actions={this.actions}
-                state={this.state}
-              />
-            )}
-          </Mutation>
-        </div>
-      );
-    }
+      }
+    },
+    clearForm: () => {
+      this.setState({ email: '', password: '' });
+    },
+  };
+  render() {
+    return (
+      <div style={{ marginTop: '70px' }}>
+        <Mutation mutation={loginMutation}>
+          {(login, { data }) => (
+            <LogInForm
+              register={() => this.props.history.push('/register')}
+              login={() => this.actions.submitLogin(login)}
+              actions={this.actions}
+              state={this.state}
+            />
+          )}
+        </Mutation>
+      </div>
+    );
+  }
 }
 
 export default LogIn;
