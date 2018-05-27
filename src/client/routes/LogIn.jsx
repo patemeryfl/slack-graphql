@@ -4,9 +4,11 @@ import { Mutation } from 'react-apollo';
 import { LogInForm } from '../components';
 
 const loginMutation = gql`
-  mutation($username: String!, $email: String!, $password: String!) {
-    register(username: $username, email: $email, password: $password) {
+  mutation($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
       ok
+      token
+      refreshToken
       errors {
         path
         message
@@ -17,8 +19,8 @@ const loginMutation = gql`
 
 class LogIn extends Component {
     state = {
-      username: '',
-      usernameError: '',
+      emai: '',
+      emailError: '',
       password: '',
       passwordError: '',
       showPassword: false,
@@ -34,12 +36,14 @@ class LogIn extends Component {
       handleClickShowPassword: () => {
         this.setState({ showPassword: !this.state.showPassword });
       },
-      submitLogin: async (register) => {
-        this.setState({ usernameError: '', passwordError: '' });
-        const { username, password } = { ...this.state };
-        const response = await register({ variables: { username, password } });
-        const { ok, errors } = response.data.register;
+      submitLogin: async (login) => {
+        this.setState({ emailError: '', passwordError: '' });
+        const { email, password } = { ...this.state };
+        const response = await login({ variables: { email, password } });
+        const { ok, token, refreshToken, errors } = response.data.login;
         if (ok) {
+          localStorage.setItem('token', token);
+          localStorage.setItem('refresh', refreshToken);
           this.props.history.push('/');
         } else {
           const err = {};
@@ -50,17 +54,17 @@ class LogIn extends Component {
         }
       },
       clearForm: () => {
-        this.setState({ username: '', password: '' });
+        this.setState({ email: '', password: '' });
       },
     }
     render() {
       return (
         <div style={{ marginTop: '70px' }}>
           <Mutation mutation={loginMutation}>
-            {(register, { data }) => (
+            {(login, { data }) => (
               <LogInForm
                 register={() => this.props.history.push('/register')}
-                login={() => this.actions.submitLogIn(register)}
+                login={() => this.actions.submitLogin(login)}
                 actions={this.actions}
                 state={this.state}
               />

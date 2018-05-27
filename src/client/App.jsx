@@ -18,6 +18,7 @@ class App extends Component {
   }
   actions = {
     showMenu: () => this.setState({ showMenu: !this.state.showMenu }),
+    logIn: () => this.setState({ loggedIn: !this.state.loggedIn }),
   }
 
   render() {

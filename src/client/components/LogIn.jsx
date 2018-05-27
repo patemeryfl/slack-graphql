@@ -37,16 +37,16 @@ const styles = theme => ({
   },
 });
 
-const LogInForm = ({ register, signin, state, actions, classes }) => (
+const LogInForm = ({ register, login, state, actions, classes }) => (
   <Card className={classes.card}>
     <CardContent>
       <Typography variant="display1" gutterBottom>
         Log In
       </Typography>
-      <FormControl error={!!state.usernameError} fullWidth className={classes.margin}>
-        <InputLabel htmlFor="username">Username</InputLabel>
-        <Input id="username" value={state.username} onChange={actions.handleChange('username')} />
-        {state.usernameError ? <FormHelperText id="name-error-text">{state.usernameError}</FormHelperText> : '' }
+      <FormControl error={!!state.emailError} fullWidth className={classes.margin}>
+        <InputLabel htmlFor="username">E-Mail</InputLabel>
+        <Input id="email" value={state.email} onChange={actions.handleChange('email')} />
+        {state.emailError ? <FormHelperText id="name-error-text">{state.emailError}</FormHelperText> : '' }
       </FormControl>
       <FormControl error={!!state.passwordError} className={classNames(classes.margin, classes.textField)}>
         <InputLabel htmlFor="password">Password</InputLabel>
@@ -71,7 +71,7 @@ const LogInForm = ({ register, signin, state, actions, classes }) => (
       </FormControl>
     </CardContent>
     <CardActions>
-      <Button size="small" onClick={signin}>Sign In</Button>
+      <Button size="small" onClick={login}>Sign In</Button>
       <Button size="small" onClick={register}>Register</Button>
     </CardActions>
   </Card>

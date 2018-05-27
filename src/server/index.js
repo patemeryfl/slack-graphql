@@ -14,6 +14,9 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 const app = express();
 app.use(cors('*'));
 
+const SECRET = 'adasdjaisoda7s89p';
+const SECRET2 = 'asdjrfj8934rjr49';
+
 // bodyParser is needed just for POST.
 app.use(
   '/graphql',
@@ -25,6 +28,8 @@ app.use(
       user: {
         id: 1,
       },
+      SECRET,
+      SECRET2,
     },
   }),
 );
