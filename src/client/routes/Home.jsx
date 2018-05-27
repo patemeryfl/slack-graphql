@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import User from '../components';
+import { Link } from 'react-router-dom';
+import { User } from '../components';
 
 class Home extends Component {
     state = {
@@ -7,7 +8,12 @@ class Home extends Component {
     }
     render() {
       return (
-        <User />
+        <div style={{ marginTop: '70px' }}>
+          <Link to="/login" href="/login">Log In</Link>
+          <Link to="/register" href="/register">Register</Link>
+          <p>Users Works</p>
+          <User />
+        </div>
       );
     }
 }

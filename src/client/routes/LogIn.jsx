@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { RegisterForm } from '../components';
+import { LogInForm } from '../components';
 
-const registerMutation = gql`
+const loginMutation = gql`
   mutation($username: String!, $email: String!, $password: String!) {
     register(username: $username, email: $email, password: $password) {
       ok
@@ -15,12 +15,10 @@ const registerMutation = gql`
   }
 `;
 
-class Register extends Component {
+class LogIn extends Component {
     state = {
       username: '',
       usernameError: '',
-      email: '',
-      emailError: '',
       password: '',
       passwordError: '',
       showPassword: false,
@@ -36,10 +34,10 @@ class Register extends Component {
       handleClickShowPassword: () => {
         this.setState({ showPassword: !this.state.showPassword });
       },
-      submitRegistration: async (register) => {
-        this.setState({ usernameError: '', emailError: '', passwordError: '' });
-        const { username, email, password } = { ...this.state };
-        const response = await register({ variables: { username, email, password } });
+      submitLogin: async (register) => {
+        this.setState({ usernameError: '', passwordError: '' });
+        const { username, password } = { ...this.state };
+        const response = await register({ variables: { username, password } });
         const { ok, errors } = response.data.register;
         if (ok) {
           this.props.history.push('/');
@@ -52,16 +50,17 @@ class Register extends Component {
         }
       },
       clearForm: () => {
-        this.setState({ username: '', email: '', password: '' });
+        this.setState({ username: '', password: '' });
       },
     }
     render() {
       return (
         <div style={{ marginTop: '70px' }}>
-          <Mutation mutation={registerMutation}>
+          <Mutation mutation={loginMutation}>
             {(register, { data }) => (
-              <RegisterForm
-                submit={() => this.actions.submitRegistration(register)}
+              <LogInForm
+                register={() => this.props.history.push('/register')}
+                login={() => this.actions.submitLogIn(register)}
                 actions={this.actions}
                 state={this.state}
               />
@@ -72,4 +71,4 @@ class Register extends Component {
     }
 }
 
-export default Register;
+export default LogIn;
