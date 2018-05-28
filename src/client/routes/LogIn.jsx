@@ -67,7 +67,7 @@ class LogIn extends Component {
     return (
       <div style={{ marginTop: '70px' }}>
         <Mutation mutation={loginMutation}>
-          {(login, { data }) => (
+          {(login) => (
             <LogInForm
               register={() => this.props.history.push('/register')}
               login={() => this.actions.submitLogin(login)}
