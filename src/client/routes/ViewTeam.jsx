@@ -30,12 +30,18 @@ class ViewTeam extends React.Component {
   }
 
   render() {
+    let teamId = 0; let channelId = 0;
     const { classes } = this.props;
+    ({ teamId, channelId } = this.props.match.params);
 
     return (
       <div className={classes.root}>
         <Chat />
-        <SideBar />
+        <SideBar
+          currentTeamId={teamId}
+          currentChannelId={channelId}
+          history={this.props.history}
+        />
       </div>
     );
   }

@@ -1,9 +1,7 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 
 const styles = theme => ({
   container: {
@@ -53,11 +51,6 @@ const MessageInput = ({ state, classes }) => (
             input: classes.bootstrapInput,
           },
         }}
-      startAdornment={
-        <InputAdornment position="start">
-          <AccountCircle />
-        </InputAdornment>
-        }
       InputLabelProps={{
           shrink: true,
           className: classes.bootstrapFormLabel,

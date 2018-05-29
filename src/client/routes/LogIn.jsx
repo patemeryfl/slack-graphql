@@ -37,6 +37,7 @@ class LogIn extends Component {
       this.setState({ showPassword: !this.state.showPassword });
     },
     submitLogin: async (login) => {
+      debugger;
       this.setState({ emailError: '', passwordError: '' });
       if (this.state.email === '') {
         this.setState({ emailError: 'Email must be provided' });

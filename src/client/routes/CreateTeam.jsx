@@ -7,6 +7,9 @@ const createTeamMutation = gql`
   mutation($name: String!) {
     createTeam(name: $name) {
       ok
+      team {
+        id
+      }
       errors {
         path
         message
@@ -34,19 +37,19 @@ class LogIn extends Component {
         const { name } = { ...this.state };
         let response;
         try {
-          await createTeam({ variables: { name } });
-          const { ok, errors } = response.data.createTeam;
-          if (ok) {
-            this.props.history.push('/');
-          } else {
-            const err = {};
-            errors.forEach(({ path, message }) => {
-              err[`${path}Error`] = message;
-            });
-            this.setState(err);
-          }
+          response = await createTeam({ variables: { name } });
         } catch (e) {
           this.setState({ authError: 'You must be logged in to perform this action.' });
+        }
+        const { ok, errors, team } = response.data.createTeam;
+        if (ok) {
+          this.props.history.push(`/viewteam/${team.id}`);
+        } else {
+          const err = {};
+          errors.forEach(({ path, message }) => {
+            err[`${path}Error`] = message;
+          });
+          this.setState(err);
         }
       }
     },

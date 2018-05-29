@@ -14,10 +14,15 @@ const styles = theme => ({
   },
 });
 
-const Teams = ({ state, actions, classes }) => (
+const Teams = ({ teams, actions, classes }) => (
   <List className={classes.team}>
-    {state.teams.map(team => (
-      <Avatar style={{ margin: '10px' }} onClick={() => actions.navigate(team.id)}>{team.name}</Avatar>
+    {teams.map(team => (
+      <Avatar
+        key={team.id}
+        style={{ margin: '10px', cursor: 'pointer' }}
+        onClick={() => actions.onViewTeam(team.id)}
+      >{team.name.charAt(0).toUpperCase()}
+      </Avatar>
     ))}
   </List>
 );

@@ -59,7 +59,7 @@ class Register extends Component {
       return (
         <div style={{ marginTop: '70px' }}>
           <Mutation mutation={registerMutation}>
-            {(register, { data }) => (
+            {(register) => (
               <RegisterForm
                 submit={() => this.actions.submitRegistration(register)}
                 actions={this.actions}

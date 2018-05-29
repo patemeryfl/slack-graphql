@@ -39,9 +39,10 @@ const Header = ({ state, actions, classes }) => (
           Slack Client
         </Typography>
         <Button color="inherit">
-          <Link to="/login" href="/login">
-            {state.loggedIn ? 'Log Out' : 'Log In'}
-          </Link>
+          {!state.loggedIn ?
+            <Link to="/login" href="/login">Log In</Link> :
+            <span onClick={actions.logOut} onKeyPress={actions.logOut} role="link" tabIndex={0} >Log Out</span>
+          }
         </Button>
       </Toolbar>
     </AppBar>

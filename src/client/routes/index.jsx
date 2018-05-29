@@ -24,6 +24,9 @@ const theme = createMuiTheme({
       dark: '#002f6c',
       text: '#ffffff',
     },
+    white: {
+      main: '#ffffff',
+    },
   },
 });
 
@@ -55,9 +58,19 @@ export default class Routes extends Component {
     showMenu: false,
     loggedIn: false,
   };
+  componentWillMount() {
+    if (isAuthenticated()) {
+      this.setState({ loggedIn: true });
+    }
+  }
   actions = {
     showMenu: () => this.setState({ showMenu: !this.state.showMenu }),
+    logOut: () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+    },
   };
+
   render() {
     return (
       <BrowserRouter>
@@ -68,7 +81,7 @@ export default class Routes extends Component {
             <Route path="/" exact component={Home} />
             <Route path="/register" exact component={Register} />
             <Route path="/login" exact component={LogIn} />
-            <PrivateRoute path="/viewteam" exact component={ViewTeam} />
+            <PrivateRoute path="/viewteam/:teamId?/:channelId?" exact component={ViewTeam} />
             <PrivateRoute path="/createteam" exact component={CreateTeam} />
           </Switch>
         </MuiThemeProvider>

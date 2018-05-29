@@ -30,7 +30,7 @@ class Messages extends React.Component {
         <List>
           {this.state.messages.map(message => (
             <ListItem key={message.id} dense button className={classes.listItem}>
-              <Avatar alt={message.username} src="/img" />
+              <Avatar alt={message.username}>{message.username.charAt(0).toUpperCase()}</Avatar>
               <ListItemText primary={message.message} />
               <ListItemSecondaryAction>
                   []
