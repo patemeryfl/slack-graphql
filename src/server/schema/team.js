@@ -11,10 +11,15 @@ export default `
     team: Team!
     errors: [Error!]
   }
+  type VoidResponse {
+    ok: Boolean!
+    errors: [Error!]
+  }
   type Query {
     allTeams: [Team!]!
   }
   type Mutation {
     createTeam(name: String!): CreateTeamResponse!
+    addTeamMember(teamId: Int!, email: String!): VoidResponse!
   }
 `;
