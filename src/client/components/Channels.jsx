@@ -5,6 +5,7 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import icons from '../assets/svgs';
 
 const styles = theme => ({
@@ -59,6 +60,12 @@ const Channels = ({ currentTeamId, channels, teamName, username, state, actions,
         </ListItem>
      ))}
     </List>
+    <Button onClick={actions.toggleAddTeamMember}>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" style={{ cursor: 'pointer' }} width="24" height="24" viewBox="0 0 24 24">
+        <path d={icons.add} />
+      </svg>&nbsp;&nbsp;
+      <Typography className={classes.font}>Invite People</Typography>
+    </Button>
   </div>
 );
 

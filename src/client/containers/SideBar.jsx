@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import findIndex from 'lodash/findIndex';
-import { Query } from 'react-apollo';
 import decode from 'jwt-decode';
 import { withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
-import allTeamsQuery from '../queries/team';
-import { Teams, Channels, AddChannel } from '../components';
+import { Teams, Channels, AddChannel, AddTeamMember } from '../components';
 
 let username = '';
 try {
@@ -34,6 +31,8 @@ const style = theme => ({
 class SideBar extends Component {
     state = {
       openAddChannel: false,
+      openAddTeamMember: false,
+      newTeamMemberEmail: '',
       name: '',
       isPublic: false,
       nameError: '',
@@ -46,7 +45,7 @@ class SideBar extends Component {
       onViewTeam: (id) => {
         this.props.history.push(`/viewteam/${id}`);
       },
-      onViewChannel(currentTeamId, id) {
+      onViewChannel: (currentTeamId, id) => {
         this.props.history.push(`/viewteam/${currentTeamId}/${id}`);
       },
       addChannel: async (teamId, createChannel) => {
@@ -68,6 +67,26 @@ class SideBar extends Component {
           }
         }
       },
+      addTeamMember: async (teamId, addTeamMember) => {
+        if (this.state.newTeamMemberEmail === '') {
+          this.setState({ nameError: 'Please enter an email.' });
+        } else {
+          this.setState({ nameError: '' });
+          const { newTeamMemberEmail } = { ...this.state };
+          const response = await addTeamMember({ variables: { teamId, email: newTeamMemberEmail } });
+          const { ok, errors } = response.data.addTeamMember;
+
+          if (ok) {
+            this.actions.toggleAddTeamMember();
+          } else {
+            const err = {};
+            errors.forEach(({ message }) => {
+              err.nameError = message;
+            });
+            this.setState(err);
+          }
+        }
+      },
       toggleAddChannel: () => {
         this.setState({
           nameError: '',
@@ -81,37 +100,38 @@ class SideBar extends Component {
       onChannelTypeChange: name => event => {
         this.setState({ [name]: event.target.checked });
       },
+      toggleAddTeamMember: () => {
+        this.setState({
+          nameError: '',
+          openAddTeamMember: !this.state.openAddTeamMember,
+          newTeamMemberEmail: '',
+        });
+      },
+      onAddTeamMemberInputChange: (prop) => (event) => {
+        this.setState({ [prop]: event.target.value });
+      },
     }
     render() {
-      const { classes, currentTeamId } = this.props;
+      const { classes, allTeams, currentTeam } = this.props;
       return (
         <Drawer variant="permanent" className={classes.sidebar}>
-          <AddChannel currentTeamId={currentTeamId} state={this.state} actions={this.actions} />
-          <Query query={allTeamsQuery}>
-            {({ loading, error, data }) => {
-                if (loading) return <p>Loading...</p>;
-                if (error) return <p>Error :(</p>;
-                const teamIdx = currentTeamId ? findIndex(data.allTeams, ['id', parseInt(currentTeamId, 10)]) : 0;
-                const team = data.allTeams[teamIdx];
-                return (
-                  <div className={classes.inner}>
-                    <Teams
-                      teams={data.allTeams}
-                      state={this.state}
-                      actions={this.actions}
-                    />
-                    <Channels
-                      currentTeamId={currentTeamId}
-                      teamName={team.name}
-                      username={username}
-                      channels={team.channels}
-                      state={this.state}
-                      actions={this.actions}
-                    />
-                  </div>
-                );
-            }}
-          </Query>
+          <AddChannel currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
+          <AddTeamMember currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
+          <div className={classes.inner}>
+            <Teams
+              teams={allTeams}
+              state={this.state}
+              actions={this.actions}
+            />
+            <Channels
+              currentTeamId={currentTeam.id}
+              teamName={currentTeam.name}
+              username={username}
+              channels={currentTeam.channels}
+              state={this.state}
+              actions={this.actions}
+            />
+          </div>
         </Drawer>
       );
     }

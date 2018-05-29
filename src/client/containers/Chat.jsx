@@ -23,12 +23,12 @@ class Chat extends Component {
     }
     actions = {}
     render() {
-      const { classes } = this.props;
+      const { classes, currentChannel } = this.props;
       return (
         <div className={classes.chat} >
           <Toolbar className={classes.toolbar}>
             <Typography variant="title" color="inherit" noWrap>
-              #general
+              {`#${currentChannel.name}`}
             </Typography>
           </Toolbar>
           <Messages />

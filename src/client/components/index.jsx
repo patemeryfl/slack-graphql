@@ -9,7 +9,8 @@ import MessageInput from './MessageInput';
 import Channels from './Channels';
 import Teams from './Teams';
 import AddChannel from './AddChannel';
+import AddTeamMember from './AddTeamMember';
 
 export { Header, Menu, User, RegisterForm, Channels,
-  Teams, AddChannel,
+  Teams, AddChannel, AddTeamMember,
   LogInForm, CreateTeamForm, Messages, MessageInput };
