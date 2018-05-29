@@ -7,7 +7,7 @@ module.exports = {
     mocha: true,
   },
   rules: {
-    'max-len': [1, 120, 2, { ignoreComments: true }],
+    'max-len': [1, 200, 2, { ignoreComments: true }],
     'react/prop-types': 0,
     'react/no-unused-state': 0,
     'object-curly-newline': 0,
