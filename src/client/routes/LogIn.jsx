@@ -49,7 +49,7 @@ class LogIn extends Component {
         if (ok) {
           localStorage.setItem('token', token);
           localStorage.setItem('refreshToken', refreshToken);
-          this.props.history.push('/');
+          this.props.history.push('/viewteam');
         } else {
           const err = {};
           errors.forEach(({ path, message }) => {

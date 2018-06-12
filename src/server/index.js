@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 import { makeExecutableSchema } from 'graphql-tools';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
-import { refreshTokens } from './auth';
+import { refreshTokens } from './utilities/auth';
 import models from './models';
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schema')));

@@ -5,21 +5,21 @@ import FormControl from '@material-ui/core/FormControl';
 
 const styles = theme => ({
   container: {
-    width: '100%',
+    width: '100vh',
     display: 'flex',
     flexWrap: 'wrap',
   },
   input: {
     borderRadius: '5px',
     margin: theme.spacing.unit,
-    width: '100%',
+    width: '100vh',
   },
   bootstrapRoot: {
-    padding: 0,
+    padding: '20px',
     'label + &': {
       marginTop: theme.spacing.unit * 3,
     },
-    width: '100%',
+    width: 'calc(100% + 250px)',
   },
   bootstrapInput: {
     borderRadius: 4,
@@ -39,10 +39,10 @@ const styles = theme => ({
   },
 });
 
-const MessageInput = ({ state, classes }) => (
+const MessageInput = ({ currentChannel, classes }) => (
   <FormControl className={classes.margin}>
     <TextField
-      placeholder={`Message # ${state.currentChannel.name}`}
+      placeholder={`Message #${currentChannel.name}`}
       fullWidth
       InputProps={{
           disableUnderline: true,

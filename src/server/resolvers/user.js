@@ -1,5 +1,5 @@
-import { tryLogin } from '../auth';
-import formatErrors from '../utilities';
+import { tryLogin } from '../utilities/auth';
+import formatErrors from '../utilities/formatErrors';
 
 export default {
   Query: {

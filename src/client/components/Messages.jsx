@@ -5,11 +5,21 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
+import { MessageInput } from '../components';
 
 const styles = theme => ({
   root: {
     width: '100%',
+    height: '100%',
     backgroundColor: theme.palette.background.paper,
+    '&:nthChild(even)': {
+      backgroundColor: '#F2F2F2',
+    },
+  },
+  list: {
+    '&:nthChild(even)': {
+      backgroundColor: '#F2F2F2',
+    },
   },
 });
 
@@ -24,10 +34,10 @@ class Messages extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, currentChannel } = this.props;
     return (
       <div className={classes.root}>
-        <List>
+        <List className={classes.list}>
           {this.state.messages.map(message => (
             <ListItem key={message.id} dense button className={classes.listItem}>
               <Avatar alt={message.username}>{message.username.charAt(0).toUpperCase()}</Avatar>
@@ -37,6 +47,7 @@ class Messages extends React.Component {
               </ListItemSecondaryAction>
             </ListItem>
           ))}
+          <MessageInput currentChannel={currentChannel} />
         </List>
       </div>
     );

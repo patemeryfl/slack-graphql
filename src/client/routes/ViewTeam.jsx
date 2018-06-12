@@ -1,5 +1,6 @@
 import React from 'react';
 import findIndex from 'lodash/findIndex';
+import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { Query } from 'react-apollo';
 import allTeamsQuery from '../queries/team';
@@ -33,26 +34,30 @@ class ViewTeam extends React.Component {
   }
 
   render() {
-    let teamId = 1; let channelId = 1;
-    const { classes } = this.props;
-    ({ teamId, channelId } = this.props.match.params);
+    const { classes, match: { params: { teamId, channelId } } } = this.props;
     return (
       <Query query={allTeamsQuery}>
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :(</p>;
-          const teamIdx = teamId ? findIndex(data.allTeams, ['id', parseInt(teamId, 10)]) : 0;
-          const team = data.allTeams[teamIdx];
-          const channelIdx = channelId ? findIndex(team.channels, ['id', parseInt(channelId, 10)]) : 0;
-          const channel = team.channels[channelIdx];
+          let teams;
+          if (data.inviteTeams.length) {
+            teams = [...data.allTeams, ...data.inviteTeams];
+          } else {
+            teams = [...data.allTeams];
+          }
+          if (!teams.length) return <Redirect to="/createteam" />;
+          const teamIdx = parseInt(teamId, 10) ? findIndex(teams, ['id', parseInt(teamId, 10)]) : 0;
+          const team = teamIdx === -1 ? teams[0] : teams[teamIdx];
+          const channelIdx = parseInt(channelId, 10) ? findIndex(team.channels, ['id', parseInt(channelId, 10)]) : 0;
+          const channel = channelIdx === -1 ? team.channels[0] : team.channels[channelIdx];
+
 
           return (
             <div className={classes.root}>
-              <Chat
-                currentChannel={channel}
-              />
+              {channel && <Chat currentChannel={channel} />}
               <SideBar
-                allTeams={data.allTeams}
+                allTeams={teams}
                 currentTeam={team}
                 currentChannelId={channel.id}
                 history={this.props.history}

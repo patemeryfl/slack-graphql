@@ -11,7 +11,7 @@ const styles = {
   list: {
     width: 250,
     padding: 20,
-    a: {
+    '&a': {
       textDecoration: 'none',
     },
   },
@@ -31,25 +31,30 @@ const Menu = ({ state, actions, classes }) => (
       >
         <div className={classes.list}>
           <List>
-            <ListItem button>
+            <ListItem>
               <Link to="/createchannel" href="/createchannel">
-                <ListItemText primary="Create Channel" />
+                <ListItemText primary="Your Files" />
               </Link>
             </ListItem>
-            <ListItem button>
+            <ListItem>
               <Link to="/createteam" href="/createteam">
-                <ListItemText primary="Create Team" />
+                <ListItemText primary="All Files" />
               </Link>
             </ListItem>
             <Divider />
-            <ListItem button>
+            <ListItem>
               <Link to="/allchannels" href="/allchannels">
-                <ListItemText primary="View All Channels" />
+                <ListItemText primary="Workspace Directory" />
               </Link>
             </ListItem>
-            <ListItem button>
+            <ListItem>
               <Link to="/viewteam" href="/allteams">
-                <ListItemText primary="View All Teams" />
+                <ListItemText primary="Help" />
+              </Link>
+            </ListItem>
+            <ListItem>
+              <Link to="/viewteam" href="/allteams">
+                <ListItemText primary="Downloads" />
               </Link>
             </ListItem>
           </List>

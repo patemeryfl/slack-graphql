@@ -1,23 +1,26 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import { List, Divider, ListItem, ListItemText, Typography, Button } from '@material-ui/core';
+import { Notifications } from '@material-ui/icons';
 import icons from '../assets/svgs';
 
 const styles = theme => ({
   channels: {
     width: '200px',
-    height: '100%',
-    padding: '80px 10px',
+    height: '100vh',
+    padding: '60px 10px',
     backgroundColor: '#01579b',
     color: '#ffffff',
   },
+  items: {
+    marginLeft: '-20px',
+    width: '33vh',
+  },
   font: {
-    lineHeight: '13px',
+    color: '#ffffff',
+  },
+  headerFont: {
+    fontSize: '1.5em',
     color: '#ffffff',
   },
   secondaryFont: {
@@ -30,21 +33,24 @@ const styles = theme => ({
   },
 });
 
-const Channels = ({ currentTeamId, channels, teamName, username, state, actions, classes }) => (
+const Channels = ({ isOwner, currentTeamId, channels, teamName, username, state, actions, classes }) => (
   <div className={classes.channels}>
-    <Typography variant="title" className={classes.font}>
-      {teamName}
-    </Typography>
-    <Typography variant="subheading" className={classes.font}>
-      {username}
-    </Typography>
-    <Divider />
-    <List>
+    <List className={classes.items}>
+      <ListItem>
+        <ListItemText
+          classes={{ primary: classes.headerFont, secondary: classes.secondaryFont }}
+          primary={teamName}
+          secondary={username}
+        />
+        <Notifications />
+      </ListItem>
+      <Divider />
       <ListItem>
         <ListItemText classes={{ primary: classes.font }} primary="Channels" />
-        <svg xmlns="http://www.w3.org/2000/svg" fill="white" style={{ cursor: 'pointer' }} width="24" height="24" viewBox="0 0 24 24" onClick={actions.toggleAddChannel}>
-          <path d={icons.add} />
-        </svg>
+        { isOwner &&
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" style={{ cursor: 'pointer' }} width="24" height="24" viewBox="0 0 24 24" onClick={actions.toggleAddChannel}>
+            <path d={icons.add} />
+          </svg> }
       </ListItem>
       {channels.map(channel => (
         <ListItem key={channel.id} button onClick={() => actions.onViewChannel(currentTeamId, channel.id)}>
@@ -60,12 +66,14 @@ const Channels = ({ currentTeamId, channels, teamName, username, state, actions,
         </ListItem>
      ))}
     </List>
+    { isOwner &&
     <Button onClick={actions.toggleAddTeamMember}>
       <svg xmlns="http://www.w3.org/2000/svg" fill="white" style={{ cursor: 'pointer' }} width="24" height="24" viewBox="0 0 24 24">
         <path d={icons.add} />
       </svg>&nbsp;&nbsp;
       <Typography className={classes.font}>Invite People</Typography>
     </Button>
+    }
   </div>
 );
 

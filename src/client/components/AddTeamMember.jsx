@@ -31,7 +31,7 @@ const AddTeamMember = ({ currentTeamId, state, actions }) => (
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">Add New Team Member</DialogTitle>
-        <DialogContent>
+        <DialogContent style={{ width: '20em', display: 'flex', justifyContent: 'center' }}>
           <FormControl error={!!state.nameError}>
             <Input
               onChange={actions.onAddTeamMemberInputChange('newTeamMemberEmail')}
@@ -41,6 +41,7 @@ const AddTeamMember = ({ currentTeamId, state, actions }) => (
               label="TeamMember"
               type="email"
               fullWidth
+              style={{ width: '20em' }}
             />
             {state.nameError ? <FormHelperText id="name-error-text">{state.nameError}</FormHelperText> : '' }
           </FormControl>

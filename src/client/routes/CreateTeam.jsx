@@ -35,12 +35,13 @@ class LogIn extends Component {
         this.setState({ nameError: 'Team name must be provided' });
       } else {
         const { name } = { ...this.state };
-        let response;
-        try {
-          response = await createTeam({ variables: { name } });
-        } catch (e) {
-          this.setState({ authError: 'You must be logged in to perform this action.' });
-        }
+        // let response;
+        // try {
+        const response = await createTeam({ variables: { name } });
+        // } catch (e) {
+        //   this.setState({ authError: 'You must be logged in to perform this action.' });
+        //   return;
+        // }
         const { ok, errors, team } = response.data.createTeam;
         if (ok) {
           this.props.history.push(`/viewteam/${team.id}`);

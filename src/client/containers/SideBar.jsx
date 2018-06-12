@@ -4,12 +4,11 @@ import { withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import { Teams, Channels, AddChannel, AddTeamMember } from '../components';
 
-let username = '';
+let user = null;
 try {
   const token = localStorage.getItem('token');
   if (token) {
-    const { user } = decode(token);
-    ({ username } = user.username);
+    ({ user } = decode(token));
   }
 } catch (err) {
   console.log(err);
@@ -18,6 +17,8 @@ try {
 const style = theme => ({
   sidebar: {
     marginTop: '30px',
+    backgroundColor: '#235796',
+    border: '0px',
   },
   inner: {
     display: 'flex',
@@ -113,6 +114,9 @@ class SideBar extends Component {
     }
     render() {
       const { classes, allTeams, currentTeam } = this.props;
+      const isOwner = user.id === currentTeam.owner;
+      let username = '';
+      ({ username } = user);
       return (
         <Drawer variant="permanent" className={classes.sidebar}>
           <AddChannel currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
@@ -124,6 +128,7 @@ class SideBar extends Component {
               actions={this.actions}
             />
             <Channels
+              isOwner={isOwner}
               currentTeamId={currentTeam.id}
               teamName={currentTeam.name}
               username={username}

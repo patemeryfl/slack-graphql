@@ -49,7 +49,7 @@ const AddChannel = ({ currentTeamId, state, actions }) => (
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">Add New Channel</DialogTitle>
-        <DialogContent>
+        <DialogContent style={{ width: '20em', display: 'flex', justifyContent: 'center' }}>
           <FormControl error={!!state.nameError}>
             <Input
               onChange={actions.onChannelInputChange('name')}
@@ -59,6 +59,7 @@ const AddChannel = ({ currentTeamId, state, actions }) => (
               label="Channel Name"
               type="text"
               fullWidth
+              style={{ width: '20em' }}
             />
             {state.nameError ? <FormHelperText id="name-error-text">{state.nameError}</FormHelperText> : '' }
           </FormControl>

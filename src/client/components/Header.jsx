@@ -14,6 +14,7 @@ const styles = theme => ({
   },
   flex: {
     flex: 1,
+    fontWeight: 'bold',
   },
   header: {
     zIndex: theme.zIndex.drawer + 1,
@@ -35,7 +36,7 @@ const Header = ({ state, actions, classes }) => (
         >
           <MenuIcon onClick={actions.showMenu} />
         </IconButton>
-        <Typography variant="title" color="inherit" className={classes.flex}>
+        <Typography variant="headline" color="inherit" className={classes.flex}>
           Slack Client
         </Typography>
         <Button color="inherit">

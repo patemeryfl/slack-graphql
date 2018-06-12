@@ -2,18 +2,26 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Messages, MessageInput } from '../components';
+import { Messages } from '../components';
 
 const style = theme => ({
   toolbar: {
     backgroundColor: theme.mixins.toolbar,
   },
   content: {
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: '#ABCDEF',
+  },
+  input: {
+    position: 'absolute',
+    marginBottom: '0px',
   },
   chat: {
+    backgroundColor: '#ABCDEF',
     marginTop: '0px',
-    width: 'calc(100% - 270px)',
+    marginRight: '-8px',
+    width: 'calc(100% - 260px)',
+    paddingTop: '5px',
+    height: '100vh',
   },
 });
 
@@ -27,12 +35,11 @@ class Chat extends Component {
       return (
         <div className={classes.chat} >
           <Toolbar className={classes.toolbar}>
-            <Typography variant="title" color="inherit" noWrap>
+            <Typography variant="headline" color="inherit" noWrap>
               {`#${currentChannel.name}`}
             </Typography>
           </Toolbar>
-          <Messages />
-          <MessageInput state={this.state} />
+          <Messages currentChannel={currentChannel} />
         </div>
       );
     }
