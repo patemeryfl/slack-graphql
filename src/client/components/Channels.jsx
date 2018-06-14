@@ -8,7 +8,7 @@ const styles = theme => ({
   channels: {
     width: '200px',
     height: '100vh',
-    padding: '60px 10px',
+    padding: '0px 10px',
     backgroundColor: '#01579b',
     color: '#ffffff',
   },

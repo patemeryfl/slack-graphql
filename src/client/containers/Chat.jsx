@@ -1,27 +1,44 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
+import { Query, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Messages } from '../components';
+import { Messages, MessageInput } from '../components';
 
-const style = theme => ({
+const allMessagesQuery = gql`
+  query($channelId: Int!) {
+    messages(channelId: $channelId) {
+      id
+      text
+      user {
+        username
+      }
+      created_at
+    }
+  }
+`;
+
+const createMessageMutation = gql`
+  mutation($channelId: Int!, $text: String!) {
+    createMessage(channelId: $channelId, text: $text)
+  }
+`;
+
+const style = () => ({
   toolbar: {
-    backgroundColor: theme.mixins.toolbar,
+    backgroundColor: '#ABCDEF',
   },
   content: {
-    backgroundColor: '#ABCDEF',
-  },
-  input: {
-    position: 'absolute',
-    marginBottom: '0px',
+    width: 'calc(100% - 260px)',
   },
   chat: {
+    display: 'flex',
+    flexDirection: 'column-reverse',
+    overflowY: 'auto',
     backgroundColor: '#ABCDEF',
     marginTop: '0px',
-    marginRight: '-8px',
-    width: 'calc(100% - 260px)',
-    paddingTop: '5px',
-    height: '100vh',
+    maxHeight: '400px',
   },
 });
 
@@ -32,14 +49,34 @@ class Chat extends Component {
     actions = {}
     render() {
       const { classes, currentChannel } = this.props;
+      const channelId = currentChannel.id;
       return (
-        <div className={classes.chat} >
+        <div className={classes.content} >
           <Toolbar className={classes.toolbar}>
             <Typography variant="headline" color="inherit" noWrap>
               {`#${currentChannel.name}`}
             </Typography>
           </Toolbar>
-          <Messages currentChannel={currentChannel} />
+          <div className={classes.chat} >
+            <Query query={allMessagesQuery} variables={{ channelId }}>
+              {({ loading, error, data }) => {
+                if (loading) return <p>Loading...</p>;
+                if (error) return <p>Error :(</p>;
+                  const { messages } = data;
+                  return <Messages messages={messages} currentChannel={currentChannel} />;
+              }}
+            </Query>
+          </div>
+          <Mutation mutation={createMessageMutation}>
+            {(createMessage) => (
+              <MessageInput
+                state={this.state}
+                actions={this.actions}
+                mutation={createMessage}
+                currentChannel={currentChannel}
+              />
+            )}
+          </Mutation>
         </div>
       );
     }

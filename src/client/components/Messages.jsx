@@ -5,7 +5,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
-import { MessageInput } from '../components';
 
 const styles = theme => ({
   root: {
@@ -17,6 +16,9 @@ const styles = theme => ({
     },
   },
   list: {
+    display: 'flex',
+    flexDirection: 'column-reverse',
+    overflowY: 'auto',
     '&:nthChild(even)': {
       backgroundColor: '#F2F2F2',
     },
@@ -25,29 +27,36 @@ const styles = theme => ({
 
 class Messages extends React.Component {
   state = {
-    messages: [
-      { id: 1, username: 'PE', message: 'Hey' },
-      { id: 2, username: 'JM', message: 'Hi' },
-      { id: 3, username: 'MS', message: 'Sup' },
-      { id: 4, username: 'PE', message: 'Yes' },
-    ],
+    input: '',
   };
 
+  actions = {
+    onMessageInputChange: (e) => {
+      this.setState({ input: e.target.value });
+    },
+    handleSubmit: async (channel, submitMessage) => {
+      const { id } = channel;
+      const text = this.state.input;
+      if (!this.state.input) return;
+      const response = await submitMessage({ variables: { channelId: id, text } });
+      if (response.data.createMessage) this.setState({ input: '' });
+    },
+  }
+
   render() {
-    const { classes, currentChannel } = this.props;
+    const { classes, messages } = this.props;
     return (
       <div className={classes.root}>
         <List className={classes.list}>
-          {this.state.messages.map(message => (
+          {messages.map(message => (
             <ListItem key={message.id} dense button className={classes.listItem}>
-              <Avatar alt={message.username}>{message.username.charAt(0).toUpperCase()}</Avatar>
-              <ListItemText primary={message.message} />
+              <Avatar alt={message.username}>{message.user.username.charAt(0).toUpperCase()}</Avatar>
+              <ListItemText primary={message.text} />
               <ListItemSecondaryAction>
-                  []
+                {message.createdAt}
               </ListItemSecondaryAction>
             </ListItem>
           ))}
-          <MessageInput currentChannel={currentChannel} />
         </List>
       </div>
     );

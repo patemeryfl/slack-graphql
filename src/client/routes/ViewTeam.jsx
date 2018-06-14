@@ -12,7 +12,7 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginTop: '60px',
+    marginTop: '-10px',
   },
   control: {
     padding: theme.spacing.unit * 2,

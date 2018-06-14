@@ -6,7 +6,11 @@ import { ApolloProvider } from 'react-apollo';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
-import { ApolloLink } from 'apollo-link';
+import { ApolloLink, split } from 'apollo-link';
+// Subscriptions
+import { WebSocketLink } from 'apollo-link-ws';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { getMainDefinition } from 'apollo-utilities';
 
 import Routes from './routes';
 
@@ -43,11 +47,25 @@ const afterwareLink = new ApolloLink((operation, forward) =>
     return response;
   }));
 
+const WS_ENDPOINT = 'ws://localhost:3000/subscriptions';
+const subscriptionClient = new SubscriptionClient(WS_ENDPOINT, {
+  reconnect: true,
+});
+
+const subscriptionLink = new WebSocketLink(subscriptionClient);
 const httpLinkWithMiddleware = afterwareLink.concat(middlewareLink.concat(httpLink));
 
+const link = split(
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query);
+    return kind === 'OperationDefinition' && operation === 'subscription';
+  },
+  subscriptionLink,
+  httpLinkWithMiddleware,
+);
 
 const client = new ApolloClient({
-  link: httpLinkWithMiddleware,
+  link,
   cache: new InMemoryCache(),
 });
 

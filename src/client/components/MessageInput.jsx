@@ -39,11 +39,14 @@ const styles = theme => ({
   },
 });
 
-const MessageInput = ({ currentChannel, classes }) => (
+const MessageInput = ({ state, actions, mutation, currentChannel, classes }) => (
   <FormControl className={classes.margin}>
     <TextField
       placeholder={`Message #${currentChannel.name}`}
       fullWidth
+      onChange={actions.onMessageInputChange}
+      onKeyDown={(e) => { if (e.key === 'Enter') { actions.handleSubmit(currentChannel, mutation); } }}
+      value={state.input}
       InputProps={{
           disableUnderline: true,
           classes: {

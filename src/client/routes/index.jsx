@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import decode from 'jwt-decode';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { Header, Menu } from '../components';
+import { Menu } from '../components';
 import Register from './Register';
 import LogIn from './LogIn';
 import CreateTeam from './CreateTeam';
@@ -75,7 +75,6 @@ export default class Routes extends Component {
     return (
       <BrowserRouter>
         <MuiThemeProvider theme={theme}>
-          <Header state={this.state} actions={this.actions} />
           <Menu state={this.state} actions={this.actions} />
           <Switch>
             <Route path="/" exact component={GetStarted} />

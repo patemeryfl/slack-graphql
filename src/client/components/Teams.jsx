@@ -8,7 +8,7 @@ const styles = theme => ({
   team: {
     height: '100vh',
     width: '60px',
-    padding: '70px 0px',
+    padding: '0px 0px',
     backgroundColor: '#002f6c',
   },
   content: {

@@ -3,6 +3,12 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
+
+import { createServer } from 'http';
+import { execute, subscribe } from 'graphql';
+// import { PubSub } from 'graphql-subscriptions';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
+
 import { makeExecutableSchema } from 'graphql-tools';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
@@ -58,7 +64,19 @@ app.use(
 );
 
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
+const server = createServer(app);
 
 models.sequelize.sync().then(() => {
-  app.listen(3000);
+  server.listen(3000, () => {
+    // eslint-disable-next-line no-new
+    new SubscriptionServer({
+      execute,
+      subscribe,
+      schema,
+    }, {
+      server,
+      path: '/subscriptions',
+    });
+  });
 });
+
