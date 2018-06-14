@@ -30,8 +30,15 @@ class Messages extends React.Component {
     nothing: '',
   };
 
-  componentWillMount() {
-    this.props.subscribeToMessages();
+  componentDidMount() {
+    this.props.subscribeToMessages(this.props.currentChannel.id);
+  }
+
+  componentWillReceiveProps({ currentChannel }) {
+    const newId = this.props.currentChannel.id;
+    if (newId !== currentChannel.id) {
+      this.props.subscribeToMessages(currentChannel.id);
+    }
   }
 
   render() {

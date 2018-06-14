@@ -88,10 +88,10 @@ class Chat extends Component {
                 <Messages
                   {...result}
                   currentChannel={currentChannel}
-                  subscribeToMessages={() =>
+                  subscribeToMessages={(id) =>
                     subscribeToMore({
                       document: newChannelMessageSubscription,
-                      variables: { channelId },
+                      variables: { channelId: id },
                       updateQuery: (prev, { subscriptionData }) => {
                         if (!subscriptionData) return prev;
                         return { ...prev, messages: [...prev.messages, subscriptionData.data.newChannelMessage] };
