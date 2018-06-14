@@ -6,6 +6,19 @@ import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Messages, MessageInput } from '../components';
 
+const newChannelMessageSubscription = gql`
+  subscription($channelId: Int!) {
+    newChannelMessage(channelId: $channelId) {
+      id
+      text
+      user {
+        username
+      }
+      created_at
+    }
+  }
+`;
+
 const allMessagesQuery = gql`
   query($channelId: Int!) {
     messages(channelId: $channelId) {
@@ -45,8 +58,20 @@ const style = () => ({
 class Chat extends Component {
     state = {
       currentChannel: '#general',
+      input: '',
     }
-    actions = {}
+    actions = {
+      onMessageInputChange: (e) => {
+        this.setState({ input: e.target.value });
+      },
+      handleSubmit: async (channel, submitMessage) => {
+        const { id } = channel;
+        const text = this.state.input;
+        if (!this.state.input) return;
+        const response = await submitMessage({ variables: { channelId: id, text } });
+        if (response.data.createMessage) this.setState({ input: '' });
+      },
+    }
     render() {
       const { classes, currentChannel } = this.props;
       const channelId = currentChannel.id;
@@ -59,12 +84,22 @@ class Chat extends Component {
           </Toolbar>
           <div className={classes.chat} >
             <Query query={allMessagesQuery} variables={{ channelId }}>
-              {({ loading, error, data }) => {
-                if (loading) return <p>Loading...</p>;
-                if (error) return <p>Error :(</p>;
-                  const { messages } = data;
-                  return <Messages messages={messages} currentChannel={currentChannel} />;
-              }}
+              {({ subscribeToMore, ...result }) => (
+                <Messages
+                  {...result}
+                  currentChannel={currentChannel}
+                  subscribeToMessages={() =>
+                    subscribeToMore({
+                      document: newChannelMessageSubscription,
+                      variables: { channelId },
+                      updateQuery: (prev, { subscriptionData }) => {
+                        if (!subscriptionData) return prev;
+                        return { ...prev, messages: [...prev.messages, subscriptionData.data.newChannelMessage] };
+                      },
+                    })
+                  }
+                />
+              )}
             </Query>
           </div>
           <Mutation mutation={createMessageMutation}>

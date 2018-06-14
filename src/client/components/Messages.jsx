@@ -17,7 +17,7 @@ const styles = theme => ({
   },
   list: {
     display: 'flex',
-    flexDirection: 'column-reverse',
+    flexDirection: 'column',
     overflowY: 'auto',
     '&:nthChild(even)': {
       backgroundColor: '#F2F2F2',
@@ -27,24 +27,18 @@ const styles = theme => ({
 
 class Messages extends React.Component {
   state = {
-    input: '',
+    nothing: '',
   };
 
-  actions = {
-    onMessageInputChange: (e) => {
-      this.setState({ input: e.target.value });
-    },
-    handleSubmit: async (channel, submitMessage) => {
-      const { id } = channel;
-      const text = this.state.input;
-      if (!this.state.input) return;
-      const response = await submitMessage({ variables: { channelId: id, text } });
-      if (response.data.createMessage) this.setState({ input: '' });
-    },
+  componentWillMount() {
+    this.props.subscribeToMessages();
   }
 
   render() {
-    const { classes, messages } = this.props;
+    const { classes, loading, error, data } = this.props;
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :(</p>;
+    const { messages } = data;
     return (
       <div className={classes.root}>
         <List className={classes.list}>

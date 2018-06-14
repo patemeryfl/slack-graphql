@@ -9,7 +9,6 @@ import { HttpLink } from 'apollo-link-http';
 import { ApolloLink, split } from 'apollo-link';
 // Subscriptions
 import { WebSocketLink } from 'apollo-link-ws';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { getMainDefinition } from 'apollo-utilities';
 
 import Routes from './routes';
@@ -47,12 +46,13 @@ const afterwareLink = new ApolloLink((operation, forward) =>
     return response;
   }));
 
-const WS_ENDPOINT = 'ws://localhost:3000/subscriptions';
-const subscriptionClient = new SubscriptionClient(WS_ENDPOINT, {
-  reconnect: true,
+const wsLink = new WebSocketLink({
+  uri: 'ws://localhost:3000/subscriptions',
+  options: {
+    reconnect: true,
+  },
 });
 
-const subscriptionLink = new WebSocketLink(subscriptionClient);
 const httpLinkWithMiddleware = afterwareLink.concat(middlewareLink.concat(httpLink));
 
 const link = split(
@@ -60,7 +60,7 @@ const link = split(
     const { kind, operation } = getMainDefinition(query);
     return kind === 'OperationDefinition' && operation === 'subscription';
   },
-  subscriptionLink,
+  wsLink,
   httpLinkWithMiddleware,
 );
 

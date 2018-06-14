@@ -2,9 +2,15 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Typography, List, Divider, ListItem, ListItemText, ListItemSecondaryAction } from '@material-ui/core';
 import { AddBox, Build, KeyboardArrowRight } from '@material-ui/icons';
+import { Header } from '../components';
+
+const state = {};
+const actions = {};
+const showMenu = () => {};
 
 const GetStarted = props => (
   <div style={{ marginTop: '80px', padding: '20px' }}>
+    <Header state={state} actions={actions} showMenu={showMenu}/>
     <Typography style={{ fontWeight: 'bold', marginBottom: '20px' }} variant="display1">Start with a workspace</Typography>
     <List>
       <Divider />

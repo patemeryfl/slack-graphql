@@ -43,6 +43,7 @@ class SideBar extends Component {
       ],
     }
     actions = {
+      navigate: () => {},
       onViewTeam: (id) => {
         this.props.history.push(`/viewteam/${id}`);
       },
