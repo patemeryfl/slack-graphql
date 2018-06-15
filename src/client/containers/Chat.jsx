@@ -88,6 +88,7 @@ class Chat extends Component {
                 <Messages
                   {...result}
                   currentChannel={currentChannel}
+                  fetchPolicy="network-only"
                   subscribeToMessages={(id) =>
                     subscribeToMore({
                       document: newChannelMessageSubscription,
