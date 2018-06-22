@@ -1,18 +1,7 @@
 import React, { Component } from 'react';
-import decode from 'jwt-decode';
 import { withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import { Teams, Channels, AddChannel, AddTeamMember } from '../components';
-
-let user = null;
-try {
-  const token = localStorage.getItem('token');
-  if (token) {
-    ({ user } = decode(token));
-  }
-} catch (err) {
-  console.log(err);
-}
 
 const style = theme => ({
   sidebar: {
@@ -114,10 +103,7 @@ class SideBar extends Component {
       },
     }
     render() {
-      const { classes, allTeams, currentTeam } = this.props;
-      const isOwner = user.id === currentTeam.owner;
-      let username = '';
-      ({ username } = user);
+      const { classes, allTeams, currentTeam, username } = this.props;
       return (
         <Drawer variant="permanent" className={classes.sidebar}>
           <AddChannel currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
@@ -129,7 +115,7 @@ class SideBar extends Component {
               actions={this.actions}
             />
             <Channels
-              isOwner={isOwner}
+              isOwner={currentTeam.admin}
               currentTeamId={currentTeam.id}
               teamName={currentTeam.name}
               username={username}

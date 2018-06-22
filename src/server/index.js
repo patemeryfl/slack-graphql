@@ -75,19 +75,19 @@ models.sequelize.sync().then(() => {
       schema,
       onConnect: async ({ token, refreshToken }) => {
         if (token && refreshToken) {
-          let user = null;
           try {
-            const payload = jwt.verify(token, SECRET);
-            ({ user } = payload);
+            const { user } = jwt.verify(token, SECRET);
+            return { models, user };
           } catch (err) {
             const newTokens = await refreshTokens(token, refreshToken, models, SECRET, SECRET2);
-            ({ user } = newTokens);
+            return { models, user: newTokens.user };
           }
-          if (!user) throw new Error('Invalid auth tokens');
-          return true;
+        //   const member = await models.Member.findOne({ where: { teamId: 1, userId: user.id } });
+        //   if (!member) throw new Error('Missing auth tokens');
         }
-        throw new Error('Missing auth tokens!');
+        return { models };
       },
+    }, {
       server,
       path: '/subscriptions',
     });

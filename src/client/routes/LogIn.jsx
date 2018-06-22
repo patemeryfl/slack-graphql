@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { LogInForm } from '../components';
+import { Header, LogInForm } from '../components';
 
 const loginMutation = gql`
   mutation($email: String!, $password: String!) {
@@ -24,6 +24,7 @@ class LogIn extends Component {
     password: '',
     passwordError: '',
     showPassword: false,
+    showMenu: false,
   };
 
   actions = {
@@ -66,6 +67,7 @@ class LogIn extends Component {
   render() {
     return (
       <div style={{ marginTop: '70px' }}>
+        <Header state={this.state} actions={this.actions} showMenu={this.state.showMenu} />
         <Mutation mutation={loginMutation}>
           {(login) => (
             <LogInForm

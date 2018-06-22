@@ -12,7 +12,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Switch from '@material-ui/core/Switch';
-import allTeamsQuery from '../queries/team';
+import meQuery from '../queries/team';
 
 const createChannelMutation = gql`
   mutation($teamId: Int!, $name: String!, $public: Boolean!) {
@@ -36,10 +36,10 @@ const AddChannel = ({ currentTeamId, state, actions }) => (
     update={(cache, { data: { createChannel } }) => {
       const { ok, channel } = createChannel;
       if (!ok) return;
-      const data = cache.readQuery({ query: allTeamsQuery });
-      const teamIdx = findIndex(data.allTeams, ['id', parseInt(currentTeamId, 10)]);
-      data.allTeams[teamIdx].channels.push(channel);
-      cache.writeQuery({ query: allTeamsQuery, data });
+      const data = cache.readQuery({ query: meQuery });
+      const teamIdx = findIndex(data.me.teams, ['id', parseInt(currentTeamId, 10)]);
+      data.me.teams[teamIdx].channels.push(channel);
+      cache.writeQuery({ query: meQuery, data });
     }}
   >
     {(createChannel) => (

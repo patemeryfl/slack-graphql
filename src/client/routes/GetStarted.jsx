@@ -9,8 +9,8 @@ const actions = {};
 const showMenu = () => {};
 
 const GetStarted = props => (
-  <div style={{ marginTop: '80px', padding: '20px' }}>
-    <Header state={state} actions={actions} showMenu={showMenu}/>
+  <div style={{ marginTop: '70px', padding: '20px' }}>
+    <Header state={state} actions={actions} showMenu={showMenu} />
     <Typography style={{ fontWeight: 'bold', marginBottom: '20px' }} variant="display1">Start with a workspace</Typography>
     <List>
       <Divider />
