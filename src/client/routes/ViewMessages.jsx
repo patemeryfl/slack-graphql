@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { Query } from 'react-apollo';
 import meQuery from '../queries/team';
-import { Chat, DirectMessages, SideBar } from '../containers';
+import { DirectMessages, SideBar } from '../containers';
 
 const styles = theme => ({
   root: {
@@ -18,11 +18,11 @@ const styles = theme => ({
   },
 });
 
-class ViewTeam extends React.Component {
+class ViewMessages extends React.Component {
   state = {
     anchor: 'left',
     currentChannel: 'general',
-    current: 'chat',
+    currentDirectMessageId: 0,
   };
 
   actions = {
@@ -31,22 +31,10 @@ class ViewTeam extends React.Component {
         anchor: event.target.value,
       });
     },
-    onViewTeam: (id) => {
-      this.props.history.push(`/viewteam/${id}`);
-      this.setState({ current: 'chat' });
-    },
-    onViewChannel: (currentTeamId, id) => {
-      this.props.history.push(`/viewteam/${currentTeamId}/${id}`);
-      this.setState({ current: 'chat' });
-    },
-    onGetDirectMessages: (currentTeamId, id) => {
-      this.props.history.push(`/viewteam/${currentTeamId}/${id}`);
-      this.setState({ current: 'messages' });
-    },
   }
 
   render() {
-    const { classes, match: { params: { teamId, channelId } } } = this.props;
+    const { classes, match: { params: { teamId, userId } } } = this.props;
     return (
       <Query query={meQuery} fetchPolicy="network-only">
         {({ loading, error, data }) => {
@@ -57,21 +45,15 @@ class ViewTeam extends React.Component {
           if (!teams) return <Redirect to="/createteam" />;
           const teamIdx = parseInt(teamId, 10) ? findIndex(teams, ['id', parseInt(teamId, 10)]) : 0;
           const team = teamIdx === -1 ? teams[0] : teams[teamIdx];
-          const channelIdx = parseInt(channelId, 10) ? findIndex(team.channels, ['id', parseInt(channelId, 10)]) : 0;
-          const channel = channelIdx === -1 ? team.channels[0] : team.channels[channelIdx];
 
           return (
             <div className={classes.root}>
-              { this.state.current === 'chat' ?
-                <Chat currentChannel={channel} /> :
-                <DirectMessages teamId={teamId} otherUserId={channelId} /> }
+              <DirectMessages teamId={teamId} otherUserId={userId} />
               <SideBar
                 allTeams={teams}
                 currentTeam={team}
-                currentChannelId={channel.id}
                 history={this.props.history}
                 username={username}
-                navigationActions={this.actions}
               />
             </div>
           );
@@ -81,4 +63,4 @@ class ViewTeam extends React.Component {
   }
 }
 
-export default withStyles(styles)(ViewTeam);
+export default withStyles(styles)(ViewMessages);

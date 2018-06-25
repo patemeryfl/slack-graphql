@@ -6,22 +6,22 @@ import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Messages, MessageInput } from '../components';
 
-const getDirectMessages = gql`
-  query($channelId: Int!) {
-    messages(channelId: $channelId) {
+const directMessagesQuery = gql`
+  query($teamId: Int!, $otherUserId: Int!) {
+    directMessages(teamId: $teamId, otherUserId: $otherUserId) {
       id
-      text
-      user {
+      sender {
         username
       }
+      text
       created_at
     }
   }
 `;
 
 const createDirectMessageMutation = gql`
-  mutation($receiverId: Int!, $text: String!) {
-    createDirectMessage(receiverId: $receiverId, text: $text)
+  mutation($receiverId: Int!, $text: String!, $teamId: Int!) {
+    createDirectMessage(receiverId: $receiverId, text: $text, teamId: $teamId)
   }
 `;
 
@@ -55,37 +55,36 @@ class DirectMessages extends Component {
         const { id } = receiver;
         const text = this.state.input;
         if (!this.state.input) return;
-        const response = await submitDirectMessage({ variables: { receiverId: id, text } });
+        const response = await submitDirectMessage({ variables: { receiverId: id, text, teamId: 1 } });
         if (response.data.createDirectMessage) this.setState({ input: '' });
       },
     }
     render() {
-      const { classes, user } = this.props;
+      const { classes, teamId, otherUserId } = this.props;
       return (
         <div className={classes.content} >
           <Toolbar className={classes.toolbar}>
             <Typography variant="headline" color="inherit" noWrap>
-              {`Messages with ${user.name}`}
+              {'Messages with a person'}
             </Typography>
           </Toolbar>
           <div className={classes.chat} >
-            <Query query={getDirectMessages}>
+            <Query query={directMessagesQuery} variables={{ teamId, otherUserId }}>
               {({ subscribeToMore, ...result }) => (
-                <div />
-                // <Messages
-                //   {...result}
-                //   fetchPolicy="network-only"
-                // />
+                <Messages
+                  {...result}
+                  fetchPolicy="network-only"
+                />
               )}
             </Query>
           </div>
           <Mutation mutation={createDirectMessageMutation}>
-            {(createMessage) => (
+            {(createDirectMessage) => (
               <MessageInput
                 state={this.state}
                 actions={this.actions}
-                mutation={createMessage}
-                placeholder={user}
+                mutation={createDirectMessage}
+                placeholder={{ id: otherUserId }}
               />
             )}
           </Mutation>

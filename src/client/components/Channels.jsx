@@ -33,7 +33,7 @@ const styles = theme => ({
   },
 });
 
-const Channels = ({ isOwner, currentTeamId, channels, getDirectMessages, teamName, username, state, actions, classes }) => (
+const Channels = ({ isOwner, currentTeamId, channels, teamName, username, state, actions, navigationActions, classes }) => (
   <div className={classes.channels}>
     <List className={classes.items}>
       <ListItem>
@@ -53,7 +53,7 @@ const Channels = ({ isOwner, currentTeamId, channels, getDirectMessages, teamNam
           </svg> }
       </ListItem>
       {channels.map(channel => (
-        <ListItem key={channel.id} button onClick={() => actions.onViewChannel(currentTeamId, channel.id)}>
+        <ListItem key={channel.id} button onClick={() => navigationActions.onViewChannel(currentTeamId, channel.id)}>
           <ListItemText classes={{ secondary: classes.secondaryFont }}secondary={`#${channel.name}`} />
         </ListItem>
      ))}
@@ -61,7 +61,7 @@ const Channels = ({ isOwner, currentTeamId, channels, getDirectMessages, teamNam
         <ListItemText classes={{ primary: classes.font }} primary="Direct Messages" />
       </ListItem>
       {state.directMessages.map(message => (
-        <ListItem key={message.id} button onClick={() => getDirectMessages(message.user.id)}>
+        <ListItem key={message.id} button onClick={() => navigationActions.onGetDirectMessages(currentTeamId, message.user.id)}>
           <ListItemText classes={{ secondary: classes.secondaryFont }} secondary={message.user.name} />
         </ListItem>
      ))}

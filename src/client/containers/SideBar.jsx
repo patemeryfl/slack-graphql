@@ -32,13 +32,6 @@ class SideBar extends Component {
       ],
     }
     actions = {
-      navigate: () => {},
-      onViewTeam: (id) => {
-        this.props.history.push(`/viewteam/${id}`);
-      },
-      onViewChannel: (currentTeamId, id) => {
-        this.props.history.push(`/viewteam/${currentTeamId}/${id}`);
-      },
       addChannel: async (teamId, createChannel) => {
         if (this.state.name === '') {
           this.setState({ nameError: 'Channel names cannot be blank' });
@@ -103,7 +96,7 @@ class SideBar extends Component {
       },
     }
     render() {
-      const { classes, allTeams, currentTeam, username, getDirectMessages } = this.props;
+      const { classes, navigationActions, allTeams, currentTeam, username } = this.props;
       return (
         <Drawer variant="permanent" className={classes.sidebar}>
           <AddChannel currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
@@ -120,9 +113,9 @@ class SideBar extends Component {
               teamName={currentTeam.name}
               username={username}
               channels={currentTeam.channels}
-              getDirectMessages={getDirectMessages}
               state={this.state}
               actions={this.actions}
+              navigationActions={navigationActions}
             />
           </div>
         </Drawer>

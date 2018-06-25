@@ -30,35 +30,50 @@ class Messages extends React.Component {
     nothing: '',
   };
 
-  componentDidMount() {
-    this.props.subscribeToMessages(this.props.currentChannel.id);
-  }
+  // componentDidMount() {
+  //   this.props.subscribeToMessages(this.props.currentChannel.id);
+  // }
 
-  componentWillReceiveProps({ currentChannel }) {
-    const newId = this.props.currentChannel.id;
-    if (newId !== currentChannel.id) {
-      this.props.subscribeToMessages(currentChannel.id);
-    }
-  }
+  // componentWillReceiveProps({ currentChannel }) {
+  //   const newId = this.props.currentChannel.id;
+  //   if (newId !== currentChannel.id) {
+  //     this.props.subscribeToMessages(currentChannel.id);
+  //   }
+  // }
 
   render() {
     const { classes, loading, error, data } = this.props;
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
-    const { messages } = data;
+    const { messages, directMessages } = data;
     return (
       <div className={classes.root}>
-        <List className={classes.list}>
-          {messages.map(message => (
-            <ListItem key={message.id} dense button className={classes.listItem}>
-              <Avatar alt={message.username}>{message.user.username.charAt(0).toUpperCase()}</Avatar>
-              <ListItemText primary={message.text} />
-              <ListItemSecondaryAction>
-                {message.createdAt}
-              </ListItemSecondaryAction>
-            </ListItem>
+        { messages && (
+          <List className={classes.list}>
+            {messages.map(message => (
+              <ListItem key={message.id} dense button className={classes.listItem}>
+                <Avatar alt={message.username}>{message.user.username.charAt(0).toUpperCase()}</Avatar>
+                <ListItemText primary={message.text} />
+                <ListItemSecondaryAction>
+                  {message.createdAt}
+                </ListItemSecondaryAction>
+              </ListItem>
           ))}
-        </List>
+          </List>
+        )}
+        {directMessages && (
+          <List className={classes.list}>
+            {directMessages.map(message => (
+              <ListItem key={message.id} dense button className={classes.listItem}>
+                <Avatar alt={message.sender.username}>{message.sender.username.charAt(0).toUpperCase()}</Avatar>
+                <ListItemText primary={message.text} />
+                <ListItemSecondaryAction>
+                  {message.createdAt}
+                </ListItemSecondaryAction>
+              </ListItem>
+          ))}
+          </List>
+        )}
       </div>
     );
   }

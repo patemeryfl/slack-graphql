@@ -9,6 +9,7 @@ import LogIn from './LogIn';
 import CreateTeam from './CreateTeam';
 import ViewTeam from './ViewTeam';
 import GetStarted from './GetStarted';
+import ViewMessages from './ViewMessages';
 
 const theme = createMuiTheme({
   palette: {
@@ -81,6 +82,7 @@ export default class Routes extends Component {
             <Route path="/register" exact component={Register} />
             <Route path="/login" exact component={LogIn} />
             <PrivateRoute path="/viewteam/:teamId?/:channelId?" exact component={ViewTeam} />
+            <PrivateRoute path="/viewteam/user/:teamId?/:userId?" exact component={ViewMessages} />
             <PrivateRoute path="/createteam" exact component={CreateTeam} />
           </Switch>
         </MuiThemeProvider>
