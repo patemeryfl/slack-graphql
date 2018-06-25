@@ -6,20 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Messages, MessageInput } from '../components';
 
-const newChannelMessageSubscription = gql`
-  subscription($channelId: Int!) {
-    newChannelMessage(channelId: $channelId) {
-      id
-      text
-      user {
-        username
-      }
-      created_at
-    }
-  }
-`;
-
-const allMessagesQuery = gql`
+const getDirectMessages = gql`
   query($channelId: Int!) {
     messages(channelId: $channelId) {
       id
@@ -32,9 +19,9 @@ const allMessagesQuery = gql`
   }
 `;
 
-const createMessageMutation = gql`
-  mutation($channelId: Int!, $text: String!) {
-    createMessage(channelId: $channelId, text: $text)
+const createDirectMessageMutation = gql`
+  mutation($receiverId: Int!, $text: String!) {
+    createDirectMessage(receiverId: $receiverId, text: $text)
   }
 `;
 
@@ -55,7 +42,7 @@ const style = () => ({
   },
 });
 
-class Chat extends Component {
+class DirectMessages extends Component {
     state = {
       currentChannel: '#general',
       input: '',
@@ -64,52 +51,41 @@ class Chat extends Component {
       onMessageInputChange: (e) => {
         this.setState({ input: e.target.value });
       },
-      handleSubmit: async (channel, submitMessage) => {
-        const { id } = channel;
+      handleSubmit: async (receiver, submitDirectMessage) => {
+        const { id } = receiver;
         const text = this.state.input;
         if (!this.state.input) return;
-        const response = await submitMessage({ variables: { channelId: id, text } });
-        if (response.data.createMessage) this.setState({ input: '' });
+        const response = await submitDirectMessage({ variables: { receiverId: id, text } });
+        if (response.data.createDirectMessage) this.setState({ input: '' });
       },
     }
     render() {
-      const { classes, currentChannel } = this.props;
-      const channelId = currentChannel.id;
+      const { classes, user } = this.props;
       return (
         <div className={classes.content} >
           <Toolbar className={classes.toolbar}>
             <Typography variant="headline" color="inherit" noWrap>
-              {`#${currentChannel.name}`}
+              {`Messages with ${user.name}`}
             </Typography>
           </Toolbar>
           <div className={classes.chat} >
-            <Query query={allMessagesQuery} variables={{ channelId }}>
+            <Query query={getDirectMessages}>
               {({ subscribeToMore, ...result }) => (
-                <Messages
-                  {...result}
-                  currentChannel={currentChannel}
-                  fetchPolicy="network-only"
-                  subscribeToMessages={(id) =>
-                    subscribeToMore({
-                      document: newChannelMessageSubscription,
-                      variables: { channelId: id },
-                      updateQuery: (prev, { subscriptionData }) => {
-                        if (!subscriptionData) return prev;
-                        return { ...prev, messages: [...prev.messages, subscriptionData.data.newChannelMessage] };
-                      },
-                    })
-                  }
-                />
+                <div />
+                // <Messages
+                //   {...result}
+                //   fetchPolicy="network-only"
+                // />
               )}
             </Query>
           </div>
-          <Mutation mutation={createMessageMutation}>
+          <Mutation mutation={createDirectMessageMutation}>
             {(createMessage) => (
               <MessageInput
                 state={this.state}
                 actions={this.actions}
                 mutation={createMessage}
-                placeholder={currentChannel}
+                placeholder={user}
               />
             )}
           </Mutation>
@@ -118,4 +94,4 @@ class Chat extends Component {
     }
 }
 
-export default withStyles(style)(Chat);
+export default withStyles(style)(DirectMessages);

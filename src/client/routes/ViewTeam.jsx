@@ -4,8 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { Query } from 'react-apollo';
 import meQuery from '../queries/team';
-
-import { Chat, SideBar } from '../containers';
+import { Chat, SideBar, DirectMessages } from '../containers';
 
 const styles = theme => ({
   root: {
@@ -31,6 +30,11 @@ class ViewTeam extends React.Component {
         anchor: event.target.value,
       });
     },
+    showDirectMessages: false,
+    getDirectMessages: (id) => {
+      console.log('got messages for', id);
+      this.setState({ showDirectMessages: !this.state.showDirectMessages });
+    },
   }
 
   render() {
@@ -42,7 +46,7 @@ class ViewTeam extends React.Component {
           if (error) return <p>Error :(</p>;
           let teams; let username;
           if (data.me.teams.length) ({ username, teams } = data.me);
-          if (!teams.length) return <Redirect to="/createteam" />;
+          if (!teams) return <Redirect to="/createteam" />;
           const teamIdx = parseInt(teamId, 10) ? findIndex(teams, ['id', parseInt(teamId, 10)]) : 0;
           const team = teamIdx === -1 ? teams[0] : teams[teamIdx];
           const channelIdx = parseInt(channelId, 10) ? findIndex(team.channels, ['id', parseInt(channelId, 10)]) : 0;
@@ -51,12 +55,14 @@ class ViewTeam extends React.Component {
           return (
             <div className={classes.root}>
               {channel && <Chat currentChannel={channel} />}
+              {this.state.showDirectMessages && <DirectMessages team={team} currentMessage={this.state.currentDirectMessage} />}
               <SideBar
                 allTeams={teams}
                 currentTeam={team}
                 currentChannelId={channel.id}
                 history={this.props.history}
                 username={username}
+                getDirectMessages={this.actions.getDirectMessages}
               />
             </div>
           );

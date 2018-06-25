@@ -27,8 +27,8 @@ class SideBar extends Component {
       isPublic: false,
       nameError: '',
       directMessages: [
-        { id: 1, sender: 'Mike' },
-        { id: 2, sender: 'Steve' },
+        { id: 1, user: { id: 1, name: 'Mike' } },
+        { id: 2, user: { id: 2, name: 'Steve' } },
       ],
     }
     actions = {
@@ -103,7 +103,7 @@ class SideBar extends Component {
       },
     }
     render() {
-      const { classes, allTeams, currentTeam, username } = this.props;
+      const { classes, allTeams, currentTeam, username, getDirectMessages } = this.props;
       return (
         <Drawer variant="permanent" className={classes.sidebar}>
           <AddChannel currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
@@ -120,6 +120,7 @@ class SideBar extends Component {
               teamName={currentTeam.name}
               username={username}
               channels={currentTeam.channels}
+              getDirectMessages={getDirectMessages}
               state={this.state}
               actions={this.actions}
             />
