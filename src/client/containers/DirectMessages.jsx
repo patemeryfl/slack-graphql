@@ -1,29 +1,12 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
 import { Query, Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Messages, MessageInput } from '../components';
 
-const directMessagesQuery = gql`
-  query($teamId: Int!, $otherUserId: Int!) {
-    directMessages(teamId: $teamId, otherUserId: $otherUserId) {
-      id
-      sender {
-        username
-      }
-      text
-      created_at
-    }
-  }
-`;
-
-const createDirectMessageMutation = gql`
-  mutation($receiverId: Int!, $text: String!, $teamId: Int!) {
-    createDirectMessage(receiverId: $receiverId, text: $text, teamId: $teamId)
-  }
-`;
+import directMessagesQuery from '../API/queries/allDirectMessages';
+import sendDirectMessageMutation from '../API/mutations/sendDirectMessage';
 
 const style = () => ({
   toolbar: {
@@ -60,12 +43,12 @@ class DirectMessages extends Component {
       },
     }
     render() {
-      const { classes, teamId, otherUserId } = this.props;
+      const { classes, teamId, otherUserId, currentMessageUser } = this.props;
       return (
         <div className={classes.content} >
           <Toolbar className={classes.toolbar}>
             <Typography variant="headline" color="inherit" noWrap>
-              {'Messages with a person'}
+              {`Messages with ${currentMessageUser}`}
             </Typography>
           </Toolbar>
           <div className={classes.chat} >
@@ -78,7 +61,7 @@ class DirectMessages extends Component {
               )}
             </Query>
           </div>
-          <Mutation mutation={createDirectMessageMutation}>
+          <Mutation mutation={sendDirectMessageMutation}>
             {(createDirectMessage) => (
               <MessageInput
                 state={this.state}

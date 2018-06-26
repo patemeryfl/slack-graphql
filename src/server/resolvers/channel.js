@@ -5,22 +5,26 @@ export default {
   Mutation: {
     createChannel: requiresAuth.createResolver(async (parent, args, { models, user }) => {
       try {
-        const member = await models.Members.findOne({ where: { teamId: args.teamId, userId: user.id } });
+        const member = await models.Member.findOne(
+          { where: { teamId: args.teamId, userId: user.id } },
+          { raw: true },
+        );
         if (!member.admin) {
           return {
             ok: false,
             errors: [
               {
                 path: 'name',
-                message: 'You must be the owner of the team to create channels',
+                message: 'You have to be the owner of the team to create channels',
               },
             ],
           };
         }
+
         const channel = await models.Channel.create(args);
         return {
-          channel,
           ok: true,
+          channel,
         };
       } catch (err) {
         console.log(err);

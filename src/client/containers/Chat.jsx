@@ -1,42 +1,13 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
 import { Query, Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Messages, MessageInput } from '../components';
 
-const newChannelMessageSubscription = gql`
-  subscription($channelId: Int!) {
-    newChannelMessage(channelId: $channelId) {
-      id
-      text
-      user {
-        username
-      }
-      created_at
-    }
-  }
-`;
-
-const allMessagesQuery = gql`
-  query($channelId: Int!) {
-    messages(channelId: $channelId) {
-      id
-      text
-      user {
-        username
-      }
-      created_at
-    }
-  }
-`;
-
-const createMessageMutation = gql`
-  mutation($channelId: Int!, $text: String!) {
-    createMessage(channelId: $channelId, text: $text)
-  }
-`;
+import allChatMessagesQuery from '../API/queries/allChatMessages';
+import newChannelMessageSubscription from '../API/subscriptions/newChannelMessage';
+import sendChatMessageMutation from '../API/mutations/sendChatMessage';
 
 const style = () => ({
   toolbar: {
@@ -83,7 +54,7 @@ class Chat extends Component {
             </Typography>
           </Toolbar>
           <div className={classes.chat} >
-            <Query query={allMessagesQuery} variables={{ channelId }}>
+            <Query query={allChatMessagesQuery} variables={{ channelId }}>
               {({ subscribeToMore, ...result }) => (
                 <Messages
                   {...result}
@@ -103,7 +74,7 @@ class Chat extends Component {
               )}
             </Query>
           </div>
-          <Mutation mutation={createMessageMutation}>
+          <Mutation mutation={sendChatMessageMutation}>
             {(createMessage) => (
               <MessageInput
                 state={this.state}

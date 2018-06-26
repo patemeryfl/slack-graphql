@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
-import { Teams, Channels, AddChannel, AddTeamMember } from '../components';
+import { Teams, Channels, CreateChannel, AddTeamMember, NewDirectMessage } from '../components';
 
 const style = theme => ({
   sidebar: {
@@ -20,9 +20,10 @@ const style = theme => ({
 
 class SideBar extends Component {
     state = {
-      openAddChannel: false,
-      openAddTeamMember: false,
-      newTeamMemberEmail: '',
+      AddChannel: false,
+      AddTeamMember: false,
+      NewDirectMessage: false,
+      email: '',
       name: '',
       isPublic: false,
       nameError: '',
@@ -41,7 +42,7 @@ class SideBar extends Component {
           const response = await createChannel({ variables: { teamId, name, public: isPublic } });
           const { ok, errors } = response.data.createChannel;
           if (ok) {
-            this.actions.toggleAddChannel();
+            this.actions.toggleModel('AddChannel');
           } else {
             const err = {};
             errors.forEach(({ path, message }) => {
@@ -52,16 +53,16 @@ class SideBar extends Component {
         }
       },
       addTeamMember: async (teamId, addTeamMember) => {
-        if (this.state.newTeamMemberEmail === '') {
+        if (this.state.email === '') {
           this.setState({ nameError: 'Please enter an email.' });
         } else {
           this.setState({ nameError: '' });
-          const { newTeamMemberEmail } = { ...this.state };
-          const response = await addTeamMember({ variables: { teamId, email: newTeamMemberEmail } });
+          const { email } = { ...this.state };
+          const response = await addTeamMember({ variables: { teamId, email } });
           const { ok, errors } = response.data.addTeamMember;
 
           if (ok) {
-            this.actions.toggleAddTeamMember();
+            this.actions.toggleModel('AddTeamMember');
           } else {
             const err = {};
             errors.forEach(({ message }) => {
@@ -71,36 +72,48 @@ class SideBar extends Component {
           }
         }
       },
-      toggleAddChannel: () => {
+      NewDirectMessage: async (teamId, newDirectMessage) => {
+        if (this.state.email === '') {
+          this.setState({ nameError: 'Please enter an email.' });
+        } else {
+          this.setState({ nameError: '' });
+          const { email } = { ...this.state };
+          const response = await newDirectMessage({ variables: { teamId, email } });
+          const { ok, errors } = response.data.addTeamMember;
+
+          if (ok) {
+            this.actions.toggleModel('NewDirectMessage');
+          } else {
+            const err = {};
+            errors.forEach(({ message }) => {
+              err.nameError = message;
+            });
+            this.setState(err);
+          }
+        }
+      },
+      toggleModel: (model) => {
         this.setState({
           nameError: '',
-          openAddChannel: !this.state.openAddChannel,
+          [model]: !this.state[model],
           name: '',
+          email: '',
         });
       },
-      onChannelInputChange: (prop) => (event) => {
+      onInputChange: (prop) => (event) => {
         this.setState({ [prop]: event.target.value });
       },
       onChannelTypeChange: name => event => {
         this.setState({ [name]: event.target.checked });
-      },
-      toggleAddTeamMember: () => {
-        this.setState({
-          nameError: '',
-          openAddTeamMember: !this.state.openAddTeamMember,
-          newTeamMemberEmail: '',
-        });
-      },
-      onAddTeamMemberInputChange: (prop) => (event) => {
-        this.setState({ [prop]: event.target.value });
       },
     }
     render() {
       const { classes, navigationActions, allTeams, currentTeam, username } = this.props;
       return (
         <Drawer variant="permanent" className={classes.sidebar}>
-          <AddChannel currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
+          <CreateChannel currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
           <AddTeamMember currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
+          <NewDirectMessage currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
           <div className={classes.inner}>
             <Teams
               teams={allTeams}

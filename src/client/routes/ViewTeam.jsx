@@ -22,6 +22,7 @@ class ViewTeam extends React.Component {
   state = {
     anchor: 'left',
     currentChannel: 'general',
+    currentMessageUser: '',
     current: 'chat',
   };
 
@@ -39,9 +40,9 @@ class ViewTeam extends React.Component {
       this.props.history.push(`/viewteam/${currentTeamId}/${id}`);
       this.setState({ current: 'chat' });
     },
-    onGetDirectMessages: (currentTeamId, id) => {
+    onGetDirectMessages: (currentTeamId, id, user) => {
       this.props.history.push(`/viewteam/${currentTeamId}/${id}`);
-      this.setState({ current: 'messages' });
+      this.setState({ current: 'messages', currentMessageUser: user });
     },
   }
 
@@ -64,7 +65,7 @@ class ViewTeam extends React.Component {
             <div className={classes.root}>
               { this.state.current === 'chat' ?
                 <Chat currentChannel={channel} /> :
-                <DirectMessages teamId={teamId} otherUserId={channelId} /> }
+                <DirectMessages currentMessageUser={this.state.currentMessageUser} teamId={teamId} otherUserId={channelId} /> }
               <SideBar
                 allTeams={teams}
                 currentTeam={team}

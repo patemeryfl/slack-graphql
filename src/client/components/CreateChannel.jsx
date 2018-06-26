@@ -1,36 +1,11 @@
 import React from 'react';
-import gql from 'graphql-tag';
 import findIndex from 'lodash/findIndex';
 import { Mutation } from 'react-apollo';
-import Button from '@material-ui/core/Button';
-import Input from '@material-ui/core/Input';
-import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Switch from '@material-ui/core/Switch';
-import meQuery from '../queries/team';
+import { Button, Input, Typography, FormControl, FormHelperText, Dialog, DialogActions, DialogContent, DialogTitle, Switch } from '@material-ui/core';
+import meQuery from '../API/queries/currentUser';
+import createChannelMutation from '../API/mutations/createChannel';
 
-const createChannelMutation = gql`
-  mutation($teamId: Int!, $name: String!, $public: Boolean!) {
-    createChannel(teamId: $teamId, name: $name, public: $public) {
-      ok
-      channel {
-        id
-        name
-      }
-      errors {
-        path
-        message
-      }
-    }
-  }
-`;
-
-const AddChannel = ({ currentTeamId, state, actions }) => (
+const CreateChannel = ({ currentTeamId, state, actions }) => (
   <Mutation
     mutation={createChannelMutation}
     update={(cache, { data: { createChannel } }) => {
@@ -44,15 +19,15 @@ const AddChannel = ({ currentTeamId, state, actions }) => (
   >
     {(createChannel) => (
       <Dialog
-        open={state.openAddChannel}
-        onClose={actions.toggleAddChannel}
+        open={state.AddChannel}
+        onClose={() => actions.toggleModel('AddChannel')}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">Add New Channel</DialogTitle>
         <DialogContent style={{ width: '20em', display: 'flex', justifyContent: 'center' }}>
           <FormControl error={!!state.nameError}>
             <Input
-              onChange={actions.onChannelInputChange('name')}
+              onChange={actions.onInputChange('name')}
               autoFocus
               margin="dense"
               id="newChannel"
@@ -74,7 +49,7 @@ const AddChannel = ({ currentTeamId, state, actions }) => (
           />
         </DialogActions>
         <DialogActions>
-          <Button onClick={actions.toggleAddChannel} color="primary">
+          <Button onClick={() => actions.toggleModel('AddChannel')} color="primary">
           Cancel
           </Button>
           <Button onClick={() => actions.addChannel(currentTeamId, createChannel)} color="primary">
@@ -86,4 +61,4 @@ const AddChannel = ({ currentTeamId, state, actions }) => (
   </Mutation>
 );
 
-export default AddChannel;
+export default CreateChannel;

@@ -1,17 +1,17 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
 import { Button, Input, FormControl, FormHelperText, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-import addTeamMemberMutation from '../API/mutations/addTeamMember';
+import newDirectMessageMutation from '../API/mutations/newDirectMessage';
 
-const AddTeamMember = ({ currentTeamId, state, actions }) => (
-  <Mutation mutation={addTeamMemberMutation}>
-    {(addTeamMember) => (
+const NewDirectMessage = ({ currentTeamId, state, actions }) => (
+  <Mutation mutation={newDirectMessageMutation}>
+    {(newDirectMessage) => (
       <Dialog
-        open={state.AddTeamMember}
-        onClose={() => actions.toggleModel('AddTeamMember')}
+        open={state.NewDirectMessage}
+        onClose={() => actions.toggleModel('NewDirectMessage')}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Add New Team Member</DialogTitle>
+        <DialogTitle id="form-dialog-title">New Direct Message</DialogTitle>
         <DialogContent style={{ width: '20em', display: 'flex', justifyContent: 'center' }}>
           <FormControl error={!!state.nameError}>
             <Input
@@ -28,11 +28,11 @@ const AddTeamMember = ({ currentTeamId, state, actions }) => (
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => actions.toggleModel('AddTeamMember')} color="primary">
+          <Button onClick={() => actions.toggleModel('NewDirectMessage')} color="primary">
           Cancel
           </Button>
-          <Button onClick={() => actions.addTeamMember(currentTeamId, addTeamMember)} color="primary">
-          Add
+          <Button onClick={() => actions.addTeamMember(currentTeamId, newDirectMessage)} color="primary">
+          Start Messaging!
           </Button>
         </DialogActions>
       </Dialog>
@@ -40,4 +40,4 @@ const AddTeamMember = ({ currentTeamId, state, actions }) => (
   </Mutation>
 );
 
-export default AddTeamMember;
+export default NewDirectMessage;
