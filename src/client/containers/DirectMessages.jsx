@@ -52,11 +52,14 @@ class DirectMessages extends Component {
             </Typography>
           </Toolbar>
           <div className={classes.chat} >
-            <Query query={directMessagesQuery} variables={{ teamId, otherUserId }}>
+            <Query
+              query={directMessagesQuery}
+              variables={{ teamId, otherUserId }}
+              skip={!teamId || !otherUserId}
+            >
               {({ subscribeToMore, ...result }) => (
                 <Messages
                   {...result}
-                  fetchPolicy="network-only"
                 />
               )}
             </Query>
@@ -67,7 +70,7 @@ class DirectMessages extends Component {
                 state={this.state}
                 actions={this.actions}
                 mutation={createDirectMessage}
-                placeholder={{ id: otherUserId }}
+                placeholder={{ id: otherUserId, name: currentMessageUser }}
               />
             )}
           </Mutation>

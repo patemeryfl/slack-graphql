@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
-import { Teams, Channels, CreateChannel, AddTeamMember, NewDirectMessage } from '../components';
+import { Teams, Channels, CreateChannel, AddTeamMember, CreateDirectMessage } from '../components';
 
 const style = theme => ({
   sidebar: {
@@ -22,15 +22,11 @@ class SideBar extends Component {
     state = {
       AddChannel: false,
       AddTeamMember: false,
-      NewDirectMessage: false,
+      CreateDirectMessage: false,
       email: '',
       name: '',
       isPublic: false,
       nameError: '',
-      directMessages: [
-        { id: 1, user: { id: 1, name: 'Mike' } },
-        { id: 2, user: { id: 2, name: 'Steve' } },
-      ],
     }
     actions = {
       addChannel: async (teamId, createChannel) => {
@@ -72,17 +68,18 @@ class SideBar extends Component {
           }
         }
       },
-      NewDirectMessage: async (teamId, newDirectMessage) => {
+      createDirectMessage: async (teamId, createDirectMessage) => {
         if (this.state.email === '') {
           this.setState({ nameError: 'Please enter an email.' });
         } else {
           this.setState({ nameError: '' });
           const { email } = { ...this.state };
-          const response = await newDirectMessage({ variables: { teamId, email } });
-          const { ok, errors } = response.data.addTeamMember;
+          const response = await createDirectMessage({ variables: { email } });
+          const { ok, errors, user } = response.data.createDirectMessage;
 
           if (ok) {
-            this.actions.toggleModel('NewDirectMessage');
+            this.actions.toggleModel('CreateDirectMessage');
+            this.props.navigationActions.onGetDirectMessages(teamId, user.id, user.username);
           } else {
             const err = {};
             errors.forEach(({ message }) => {
@@ -113,7 +110,7 @@ class SideBar extends Component {
         <Drawer variant="permanent" className={classes.sidebar}>
           <CreateChannel currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
           <AddTeamMember currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
-          <NewDirectMessage currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
+          <CreateDirectMessage currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
           <div className={classes.inner}>
             <Teams
               teams={allTeams}
@@ -121,12 +118,8 @@ class SideBar extends Component {
               actions={this.actions}
             />
             <Channels
-              isOwner={currentTeam.admin}
-              currentTeamId={currentTeam.id}
-              teamName={currentTeam.name}
+              currentTeam={currentTeam}
               username={username}
-              channels={currentTeam.channels}
-              state={this.state}
               actions={this.actions}
               navigationActions={navigationActions}
             />

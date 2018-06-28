@@ -10,7 +10,6 @@ import { ApolloLink, split } from 'apollo-link';
 // Subscriptions
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-
 import Routes from './routes';
 
 const httpLink = new HttpLink({ uri: 'http://localhost:3000/graphql' });
@@ -23,7 +22,6 @@ const middlewareLink = new ApolloLink((operation, forward) => {
       'x-refresh-token': localStorage.getItem('refreshToken'),
     },
   });
-
   return forward(operation);
 });
 
@@ -33,16 +31,9 @@ const afterwareLink = new ApolloLink((operation, forward) =>
     if (headers) {
       const token = headers.get('x-token');
       const refreshToken = headers.get('x-refresh-token');
-
-      if (token) {
-        localStorage.setItem('token', token);
-      }
-
-      if (refreshToken) {
-        localStorage.setItem('refreshToken', refreshToken);
-      }
+      if (token) localStorage.setItem('token', token);
+      if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     }
-
     return response;
   }));
 

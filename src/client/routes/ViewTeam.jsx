@@ -3,7 +3,7 @@ import findIndex from 'lodash/findIndex';
 import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { Query } from 'react-apollo';
-import meQuery from '../queries/team';
+import meQuery from '../API/queries/currentUser';
 import { Chat, DirectMessages, SideBar } from '../containers';
 
 const styles = theme => ({
@@ -41,8 +41,8 @@ class ViewTeam extends React.Component {
       this.setState({ current: 'chat' });
     },
     onGetDirectMessages: (currentTeamId, id, user) => {
-      this.props.history.push(`/viewteam/${currentTeamId}/${id}`);
       this.setState({ current: 'messages', currentMessageUser: user });
+      this.props.history.push(`/viewteam/${currentTeamId}/${id}`);
     },
   }
 
@@ -60,7 +60,6 @@ class ViewTeam extends React.Component {
           const team = teamIdx === -1 ? teams[0] : teams[teamIdx];
           const channelIdx = parseInt(channelId, 10) ? findIndex(team.channels, ['id', parseInt(channelId, 10)]) : 0;
           const channel = channelIdx === -1 ? team.channels[0] : team.channels[channelIdx];
-
           return (
             <div className={classes.root}>
               { this.state.current === 'chat' ?

@@ -9,8 +9,8 @@ import Channels from './Channels';
 import Teams from './Teams';
 import CreateChannel from './CreateChannel';
 import AddTeamMember from './AddTeamMember';
-import NewDirectMessage from './NewDirectMessage';
+import CreateDirectMessage from './CreateDirectMessage';
 
 export { Header, Menu, RegisterForm, Channels,
-  Teams, CreateChannel, AddTeamMember, NewDirectMessage,
+  Teams, CreateChannel, AddTeamMember, CreateDirectMessage,
   LogInForm, CreateTeamForm, Messages, MessageInput };

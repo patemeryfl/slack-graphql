@@ -33,13 +33,13 @@ const styles = theme => ({
   },
 });
 
-const Channels = ({ isOwner, currentTeamId, channels, teamName, username, state, actions, navigationActions, classes }) => (
+const Channels = ({ currentTeam, username, actions, navigationActions, classes }) => (
   <div className={classes.channels}>
     <List className={classes.items}>
       <ListItem>
         <ListItemText
           classes={{ primary: classes.headerFont, secondary: classes.secondaryFont }}
-          primary={teamName}
+          primary={currentTeam.name}
           secondary={username}
         />
         <Notifications />
@@ -47,29 +47,29 @@ const Channels = ({ isOwner, currentTeamId, channels, teamName, username, state,
       <Divider />
       <ListItem>
         <ListItemText classes={{ primary: classes.font }} primary="Channels" />
-        { isOwner &&
+        { currentTeam.isOwner &&
           <svg xmlns="http://www.w3.org/2000/svg" fill="white" style={{ cursor: 'pointer' }} width="24" height="24" viewBox="0 0 24 24" onClick={() => actions.toggleModel('AddChannel')}>
             <path d={icons.add} />
           </svg> }
       </ListItem>
-      {channels.map(channel => (
-        <ListItem key={channel.id} button onClick={() => navigationActions.onViewChannel(currentTeamId, channel.id)}>
+      {currentTeam.channels.map(channel => (
+        <ListItem key={channel.id} button onClick={() => navigationActions.onViewChannel(currentTeam.id, channel.id)}>
           <ListItemText classes={{ secondary: classes.secondaryFont }}secondary={`#${channel.name}`} />
         </ListItem>
      ))}
       <ListItem>
         <ListItemText classes={{ primary: classes.font }} primary="Direct Messages" />
-        <svg xmlns="http://www.w3.org/2000/svg" fill="white" style={{ cursor: 'pointer' }} width="24" height="24" viewBox="0 0 24 24" onClick={() => actions.toggleModel('NewDirectMessage')}>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="white" style={{ cursor: 'pointer' }} width="24" height="24" viewBox="0 0 24 24" onClick={() => actions.toggleModel('CreateDirectMessage')}>
           <path d={icons.add} />
         </svg>
       </ListItem>
-      {state.directMessages.map(message => (
-        <ListItem key={message.id} button onClick={() => navigationActions.onGetDirectMessages(currentTeamId, message.user.id, message.user.name)}>
-          <ListItemText classes={{ secondary: classes.secondaryFont }} secondary={message.user.name} />
+      {currentTeam.directMessageMembers.map(member => (
+        <ListItem key={member.id} button onClick={() => navigationActions.onGetDirectMessages(currentTeam.id, member.id, member.username)}>
+          <ListItemText classes={{ secondary: classes.secondaryFont }} secondary={member.username} />
         </ListItem>
      ))}
     </List>
-    { isOwner &&
+    { currentTeam.isOwner &&
     <Button onClick={() => actions.toggleModel('AddTeamMember')}>
       <svg xmlns="http://www.w3.org/2000/svg" fill="white" style={{ cursor: 'pointer' }} width="24" height="24" viewBox="0 0 24 24">
         <path d={icons.add} />

@@ -42,7 +42,7 @@ const styles = theme => ({
 const MessageInput = ({ state, actions, mutation, placeholder, classes }) => (
   <FormControl className={classes.margin}>
     <TextField
-      placeholder={`Message #${placeholder.name}`}
+      placeholder={`Message ${placeholder.name}`}
       fullWidth
       onChange={actions.onMessageInputChange}
       onKeyDown={(e) => { if (e.key === 'Enter') { actions.handleSubmit(placeholder, mutation); } }}

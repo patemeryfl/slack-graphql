@@ -23,6 +23,11 @@ const styles = theme => ({
       backgroundColor: '#F2F2F2',
     },
   },
+  listItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
 });
 
 class Messages extends React.Component {
@@ -53,7 +58,7 @@ class Messages extends React.Component {
             {messages.map(message => (
               <ListItem key={message.id} dense button className={classes.listItem}>
                 <Avatar alt={message.username}>{message.user.username.charAt(0).toUpperCase()}</Avatar>
-                <ListItemText primary={message.text} />
+                <ListItemText primary={message.created_at} secondary={message.text} />
                 <ListItemSecondaryAction>
                   {message.createdAt}
                 </ListItemSecondaryAction>
@@ -66,10 +71,10 @@ class Messages extends React.Component {
             {directMessages.map(message => (
               <ListItem key={message.id} dense button className={classes.listItem}>
                 <Avatar alt={message.sender.username}>{message.sender.username.charAt(0).toUpperCase()}</Avatar>
-                <ListItemText primary={message.text} />
-                <ListItemSecondaryAction>
-                  {message.createdAt}
-                </ListItemSecondaryAction>
+                <div>
+                  <ListItemText secondary={message.created_at} />
+                  <ListItemText primary={message.text} />
+                </div>
               </ListItem>
           ))}
           </List>
