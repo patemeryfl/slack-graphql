@@ -35,16 +35,24 @@ class Messages extends React.Component {
     nothing: '',
   };
 
-  // componentDidMount() {
-  //   this.props.subscribeToMessages(this.props.currentChannel.id);
-  // }
+  componentDidMount() {
+    if (this.props.type === 'chatMessages') {
+      this.props.subscribeToMessages(this.props.currentChannel.id);
+    } else {
+      this.props.subscribeToMessages();
+    }
+  }
 
-  // componentWillReceiveProps({ currentChannel }) {
-  //   const newId = this.props.currentChannel.id;
-  //   if (newId !== currentChannel.id) {
-  //     this.props.subscribeToMessages(currentChannel.id);
-  //   }
-  // }
+  componentWillReceiveProps({ currentChannel }, { teamId, userId }) {
+    if (this.props.type === 'chatMessages') {
+      const newId = this.props.currentChannel.id;
+      if (newId !== currentChannel.id) {
+        this.props.subscribeToMessages(currentChannel.id);
+      }
+    } else if (this.props.teamId !== teamId || this.props.userId !== userId) {
+      this.props.subscribeToMessages();
+    }
+  }
 
   render() {
     const { classes, loading, error, data } = this.props;

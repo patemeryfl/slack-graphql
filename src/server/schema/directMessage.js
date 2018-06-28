@@ -13,6 +13,10 @@ export default `
     errors: [Error!]
   }
 
+  type Subscription {
+    newDirectMessage(teamId: Int!, userId: Int!): DirectMessage!
+  }
+
   type Query {
     directMessages(teamId: Int!, otherUserId: Int!): [DirectMessage!]!
   }

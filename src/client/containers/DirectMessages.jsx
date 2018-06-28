@@ -7,6 +7,7 @@ import { Messages, MessageInput } from '../components';
 
 import directMessagesQuery from '../API/queries/allDirectMessages';
 import sendDirectMessageMutation from '../API/mutations/sendDirectMessage';
+import newDirectMessageSubscription from '../API/subscriptions/newDirectMessage';
 
 const style = () => ({
   toolbar: {
@@ -35,11 +36,11 @@ class DirectMessages extends Component {
         this.setState({ input: e.target.value });
       },
       handleSubmit: async (receiver, submitDirectMessage) => {
-        const { id } = receiver;
+        const { id, teamId } = receiver;
         const text = this.state.input;
         if (!this.state.input) return;
-        const response = await submitDirectMessage({ variables: { receiverId: id, text, teamId: 1 } });
-        if (response.data.createDirectMessage) this.setState({ input: '' });
+        const response = await submitDirectMessage({ variables: { receiverId: id, text, teamId } });
+        if (response.data.sendDirectMessage) this.setState({ input: '' });
       },
     }
     render() {
@@ -60,6 +61,20 @@ class DirectMessages extends Component {
               {({ subscribeToMore, ...result }) => (
                 <Messages
                   {...result}
+                  type="directMessages"
+                  currentChannel={otherUserId}
+                  fetchPolicy="network-only"
+                  subscribeToMessages={() =>
+                    subscribeToMore({
+                      document: newDirectMessageSubscription,
+                      variables: { teamId, userId: otherUserId },
+                      updateQuery: (prev, { subscriptionData }) => {
+                        if (!subscriptionData) return prev;
+                        if (subscriptionData.errors) return subscriptionData.errors.map(e => console.log(e.message));
+                        return { ...prev, directMessages: [...prev.directMessages, subscriptionData.data.newDirectMessage] };
+                      },
+                    })
+                  }
                 />
               )}
             </Query>
@@ -70,7 +85,7 @@ class DirectMessages extends Component {
                 state={this.state}
                 actions={this.actions}
                 mutation={createDirectMessage}
-                placeholder={{ id: otherUserId, name: currentMessageUser }}
+                placeholder={{ id: otherUserId, teamId, name: currentMessageUser }}
               />
             )}
           </Mutation>

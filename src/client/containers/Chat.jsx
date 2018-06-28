@@ -58,6 +58,7 @@ class Chat extends Component {
               {({ subscribeToMore, ...result }) => (
                 <Messages
                   {...result}
+                  type="chatMessages"
                   currentChannel={currentChannel}
                   fetchPolicy="network-only"
                   subscribeToMessages={(id) =>
@@ -66,6 +67,7 @@ class Chat extends Component {
                       variables: { channelId: id },
                       updateQuery: (prev, { subscriptionData }) => {
                         if (!subscriptionData) return prev;
+                        if (subscriptionData.errors) return subscriptionData.errors.map(e => console.log(e.message));
                         return { ...prev, messages: [...prev.messages, subscriptionData.data.newChannelMessage] };
                       },
                     })
