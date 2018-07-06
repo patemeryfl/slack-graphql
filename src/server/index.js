@@ -21,6 +21,10 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const app = express();
 app.use(cors('*'));
+app.use(express.static(path.join(__dirname, '/public')));
+app.get('*', (request, response) => {
+  response.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+});
 
 const SECRET = 'adasdjaisoda7s89p';
 const SECRET2 = 'asdjrfj8934rjr49';
@@ -64,6 +68,7 @@ app.use(
 );
 
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
+
 const server = createServer(app);
 
 models.sequelize.sync().then(() => {

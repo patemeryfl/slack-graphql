@@ -16,13 +16,13 @@ const styles = theme => ({
   },
 });
 
-const Teams = ({ history, teams, actions, classes }) => (
+const Teams = ({ history, teams, navigationActions, classes }) => (
   <List className={classes.team}>
     {teams.map(team => (
       <Avatar
         key={team.id}
         style={{ margin: '10px', cursor: 'pointer' }}
-        onClick={() => actions.onViewTeam(team.id)}
+        onClick={() => navigationActions.onViewTeam(team.id)}
       >{team.name.charAt(0).toUpperCase()}
       </Avatar>
     ))}

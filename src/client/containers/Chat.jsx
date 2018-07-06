@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
 import { Query, Mutation } from 'react-apollo';
-import Typography from '@material-ui/core/Typography';
-import Toolbar from '@material-ui/core/Toolbar';
-import { Messages, MessageInput } from '../components';
+import { Messages, MessageInput, InfoBar } from '../components';
 
 import allChatMessagesQuery from '../API/queries/allChatMessages';
 import newChannelMessageSubscription from '../API/subscriptions/newChannelMessage';
 import sendChatMessageMutation from '../API/mutations/sendChatMessage';
 
 const style = () => ({
-  toolbar: {
-    backgroundColor: '#ABCDEF',
-  },
   content: {
-    width: 'calc(100% - 260px)',
+    position: 'absolute',
+    bottom: '0px',
+    height: '100%',
+    width: 'calc(100% - 240px)',
   },
   chat: {
     display: 'flex',
@@ -22,7 +20,6 @@ const style = () => ({
     overflowY: 'auto',
     backgroundColor: '#ABCDEF',
     marginTop: '0px',
-    maxHeight: '400px',
   },
 });
 
@@ -34,6 +31,9 @@ class Chat extends Component {
     actions = {
       onMessageInputChange: (e) => {
         this.setState({ input: e.target.value });
+      },
+      onChatInputChange: (e) => {
+        this.setState({ search: e.target.value });
       },
       handleSubmit: async (channel, submitMessage) => {
         const { id } = channel;
@@ -48,11 +48,7 @@ class Chat extends Component {
       const channelId = currentChannel.id;
       return (
         <div className={classes.content} >
-          <Toolbar className={classes.toolbar}>
-            <Typography variant="headline" color="inherit" noWrap>
-              {`#${currentChannel.name}`}
-            </Typography>
-          </Toolbar>
+          <InfoBar title={`#${currentChannel.name}`} state={this.state} actions={this.actions} />
           <div className={classes.chat} >
             <Query query={allChatMessagesQuery} variables={{ channelId }}>
               {({ subscribeToMore, ...result }) => (

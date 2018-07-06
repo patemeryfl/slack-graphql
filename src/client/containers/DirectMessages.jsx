@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
 import { Query, Mutation } from 'react-apollo';
-import Typography from '@material-ui/core/Typography';
-import Toolbar from '@material-ui/core/Toolbar';
-import { Messages, MessageInput } from '../components';
+import { Messages, MessageInput, InfoBar } from '../components';
 
 import directMessagesQuery from '../API/queries/allDirectMessages';
 import sendDirectMessageMutation from '../API/mutations/sendDirectMessage';
 import newDirectMessageSubscription from '../API/subscriptions/newDirectMessage';
 
 const style = () => ({
-  toolbar: {
-    backgroundColor: '#ABCDEF',
-  },
   content: {
-    width: 'calc(100% - 260px)',
+    position: 'absolute',
+    bottom: '0px',
+    width: '100%',
+    height: '100%',
   },
   chat: {
     display: 'flex',
@@ -22,7 +20,6 @@ const style = () => ({
     overflowY: 'auto',
     backgroundColor: '#ABCDEF',
     marginTop: '0px',
-    maxHeight: '400px',
   },
 });
 
@@ -47,11 +44,7 @@ class DirectMessages extends Component {
       const { classes, teamId, otherUserId, currentMessageUser } = this.props;
       return (
         <div className={classes.content} >
-          <Toolbar className={classes.toolbar}>
-            <Typography variant="headline" color="inherit" noWrap>
-              {`Messages with ${currentMessageUser}`}
-            </Typography>
-          </Toolbar>
+          <InfoBar title={`Messages with ${currentMessageUser}`} state={this.state} actions={this.actions} />
           <div className={classes.chat} >
             <Query
               query={directMessagesQuery}

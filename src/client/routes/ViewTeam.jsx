@@ -6,21 +6,17 @@ import { Query } from 'react-apollo';
 import meQuery from '../API/queries/currentUser';
 import { Chat, DirectMessages, SideBar } from '../containers';
 
-const styles = theme => ({
+const styles = () => ({
   root: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: '-10px',
-  },
-  control: {
-    padding: theme.spacing.unit * 2,
+    justifyContent: 'flex-start',
+    margin: '-10px',
   },
 });
 
 class ViewTeam extends React.Component {
   state = {
-    anchor: 'left',
     currentChannel: 'general',
     currentMessageUser: '',
     current: 'chat',
@@ -62,17 +58,21 @@ class ViewTeam extends React.Component {
           const channel = channelIdx === -1 ? team.channels[0] : team.channels[channelIdx];
           return (
             <div className={classes.root}>
-              { this.state.current === 'chat' ?
-                <Chat currentChannel={channel} /> :
-                <DirectMessages currentMessageUser={this.state.currentMessageUser} teamId={teamId} otherUserId={channelId} /> }
-              <SideBar
-                allTeams={teams}
-                currentTeam={team}
-                currentChannelId={channel.id}
-                history={this.props.history}
-                username={username}
-                navigationActions={this.actions}
-              />
+              <div>
+                <SideBar
+                  allTeams={teams}
+                  currentTeam={team}
+                  currentChannelId={channel.id}
+                  history={this.props.history}
+                  username={username}
+                  navigationActions={this.actions}
+                />
+              </div>
+              <div>
+                { this.state.current === 'chat' ?
+                  <Chat currentChannel={channel} /> :
+                  <DirectMessages currentMessageUser={this.state.currentMessageUser} teamId={teamId} otherUserId={channelId} /> }
+              </div>
             </div>
           );
         }}

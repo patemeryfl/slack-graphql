@@ -43,7 +43,7 @@ class Register extends Component {
         const response = await register({ variables: { username, email, password } });
         const { ok, errors } = response.data.register;
         if (ok) {
-          this.props.history.push('/');
+          this.props.history.push('/login');
         } else {
           const err = {};
           errors.forEach(({ path, message }) => {

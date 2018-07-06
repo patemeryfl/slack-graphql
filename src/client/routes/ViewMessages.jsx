@@ -3,7 +3,7 @@ import findIndex from 'lodash/findIndex';
 import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { Query } from 'react-apollo';
-import meQuery from '../queries/team';
+import meQuery from '../API/queries/currentUser';
 import { DirectMessages, SideBar } from '../containers';
 
 const styles = theme => ({

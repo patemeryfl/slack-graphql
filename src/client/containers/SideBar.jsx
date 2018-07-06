@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
-import Drawer from '@material-ui/core/Drawer';
 import { Teams, Channels, CreateChannel, AddTeamMember, CreateDirectMessage } from '../components';
 
 const style = theme => ({
   sidebar: {
-    marginTop: '30px',
+    marginTop: '0px',
     backgroundColor: '#235796',
     border: '0px',
+    width: '240px',
   },
   inner: {
     display: 'flex',
@@ -107,7 +107,7 @@ class SideBar extends Component {
     render() {
       const { classes, navigationActions, allTeams, currentTeam, username } = this.props;
       return (
-        <Drawer variant="permanent" className={classes.sidebar}>
+        <div className={classes.sidebar}>
           <CreateChannel currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
           <AddTeamMember currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
           <CreateDirectMessage currentTeamId={currentTeam.id} state={this.state} actions={this.actions} />
@@ -115,7 +115,7 @@ class SideBar extends Component {
             <Teams
               teams={allTeams}
               state={this.state}
-              actions={this.actions}
+              navigationActions={navigationActions}
             />
             <Channels
               currentTeam={currentTeam}
@@ -124,7 +124,7 @@ class SideBar extends Component {
               navigationActions={navigationActions}
             />
           </div>
-        </Drawer>
+        </div>
       );
     }
 }
