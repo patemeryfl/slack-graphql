@@ -23,7 +23,7 @@ const app = express();
 app.use(cors('*'));
 app.use(express.static(path.join(__dirname, '/public')));
 app.get('*', (request, response) => {
-  response.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+  response.sendFile(path.join(__dirname, 'index.html'));
 });
 
 const SECRET = 'adasdjaisoda7s89p';

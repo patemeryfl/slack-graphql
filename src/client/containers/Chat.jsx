@@ -9,10 +9,8 @@ import sendChatMessageMutation from '../API/mutations/sendChatMessage';
 
 const style = () => ({
   content: {
-    position: 'absolute',
-    bottom: '0px',
     height: '100%',
-    width: 'calc(100% - 240px)',
+    width: '100%',
   },
   chat: {
     display: 'flex',

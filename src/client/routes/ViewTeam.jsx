@@ -12,6 +12,8 @@ const styles = () => ({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     margin: '-10px',
+    width: '100%',
+    height: '100%',
   },
 });
 
